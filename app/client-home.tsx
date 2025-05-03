@@ -275,13 +275,7 @@ export default function ClientHome() {
                 </Link>
               </Button>
             </div>
-            {/* 外层容器保留 */}
-            <div className="relative mx-auto max-w-4xl rounded-xl overflow-hidden shadow-2xl bg-gradient-to-r from-gray-50 to-gray-100 p-8">
-              {/* "Crea diseños únicos" div 已被删除 */}
-
-              {/* 下面是示例文字，保留 */}
-              <p className="mt-4 text-gray-600 italic">Ejemplo de lettering creado con nuestra herramienta</p>
-            </div>
+           {/* 整个示例容器已被删除 */}
           </div>
         </section>
 
