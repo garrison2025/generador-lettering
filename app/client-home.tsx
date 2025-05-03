@@ -240,7 +240,7 @@ export default function ClientHome() {
         {/* Hero Section - Updated with AnimatedLogo */}
         <section className="py-20 bg-gradient-to-b from-white to-[#F4F4F8]">
           <div className="container mx-auto px-4 text-center">
-            <AnimatedLogo size={120} className="mb-6" />
+          {/* <AnimatedLogo size={120} className="mb-6" /> */}
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-[#4A4A4A]">
               Generador de <span className="text-primary">Lettering</span> y{" "}
               <span className="text-secondary">Letras Personalizadas</span>
