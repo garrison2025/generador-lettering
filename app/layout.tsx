@@ -16,6 +16,8 @@ const inter = Inter({
   adjustFontFallback: true,
 })
 
+// --- 修改后的 Metadata ---
+// 注意：viewport 和 themeColor 已从此对象中移除
 export const metadata: Metadata = {
   metadataBase: new URL("https://generadordelettering.org"),
   title: "Generador de Lettering - Crea diseños tipográficos únicos y letras personalizadas",
@@ -72,14 +74,9 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
-  themeColor: "#5B4FBE",
+  // viewport 和 themeColor 已移除
   verification: {
-    google: "google-site-verification-code",
+    google: "google-site-verification-code", // 请替换成你的 Google 验证码
   },
   robots: {
     index: true,
@@ -92,11 +89,20 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    "google-site-verification": "your-verification-code",
+    "google-site-verification": "your-verification-code", // 请替换成你的 Google 验证码
   },
     generator: 'v0.dev'
 }
 
+// --- 新增的独立 Viewport 导出 ---
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#5B4FBE", // themeColor 移到这里
+};
+
+// --- RootLayout 组件定义保持不变 ---
 export default function RootLayout({
   children,
 }: Readonly<{
