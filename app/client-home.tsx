@@ -1,8 +1,9 @@
-"use client"; // <-- 仍然需要，因为使用了 useInView 和其他客户端交互
+"use client";
 
-import { Suspense } from "react";
+// 注意：useState 和 useEffect 已经被移除
+import { Suspense } from "react"; // useEffect, useState 已移除
 import { Button } from "@/components/ui/button";
-import { Sparkles, BookOpen, CheckCircle, HelpCircle } from "lucide-react"; // 只保留此文件实际使用的图标
+import { Sparkles, Download, Palette, Type, BookOpen, CheckCircle, HelpCircle, Sliders, Save } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -15,16 +16,8 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useInView } from "react-intersection-observer";
 import { AnimatedLogo } from "@/components/animated-logo";
 
-// --- 导入新创建的服务器组件 ---
-import { WhyChooseUs } from "@/components/home/WhyChooseUs";
-import { HowToUse } from "@/components/home/HowToUse";
-import { CtaSection } from "@/components/home/CtaSection";
-
-// --- 数据定义 (保持不变，但建议未来移到单独文件) ---
-// (注意: RAZONES 和 PASOS_USO 的图标定义现在在对应的服务器组件里了，
-// 但数据结构本身还需要在这里定义，以便传递给子组件)
-
-const FONTS = [ // FONTS 数据仍然需要，用于 TemplatesCarousel
+// 定义字体和模板数据 (保持不变)
+const FONTS = [
   { id: "dancing-script", name: "Caligrafía Elegante", family: "'Dancing Script', cursive" },
   { id: "pacifico", name: "Script Moderno", family: "'Pacifico', cursive" },
   { id: "satisfy", name: "Caligrafía Fluida", family: "'Satisfy', cursive" },
@@ -37,38 +30,157 @@ const FONTS = [ // FONTS 数据仍然需要，用于 TemplatesCarousel
   { id: "permanent-marker", name: "Marcador", family: "'Permanent Marker', cursive" },
 ];
 
-const PLANTILLAS_DESTACADAS = [ // PLANTILLAS_DESTACADAS 数据仍然需要，用于 TemplatesCarousel
-  { id: "boda", nombre: "Invitación de Boda", texto: "Juan & María", estilo: "dancing-script", color: "#5B4FBE", fontSize: 32, letterSpacing: 1, alignment: "center", shadow: true, shadowColor: "rgba(0,0,0,0.3)", shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2 },
-  { id: "cumpleanos", nombre: "Feliz Cumpleaños", texto: "¡Feliz Cumpleaños!", estilo: "pacifico", color: "#FF6B6B", fontSize: 28, letterSpacing: 1, alignment: "center", shadow: true, shadowColor: "rgba(0,0,0,0.2)", shadowBlur: 5, shadowOffsetX: 1, shadowOffsetY: 1 },
-  { id: "navidad", nombre: "Navidad", texto: "¡Feliz Navidad!", estilo: "lobster", color: "#43A047", fontSize: 30, letterSpacing: 1, alignment: "center", shadow: true, shadowColor: "#FF6B6B", shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2 },
-  { id: "logo", nombre: "Logo Empresa", texto: "Mi Empresa", estilo: "caveat", color: "#5B4FBE", fontSize: 34, letterSpacing: 2, alignment: "center", outline: true, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "motivacion1", nombre: "Motivación Diaria", texto: "Nunca te rindas", estilo: "permanent-marker", color: "#E53935", fontSize: 36, letterSpacing: 1, alignment: "center", shadow: true, shadowColor: "rgba(0,0,0,0.4)", shadowBlur: 3, shadowOffsetX: 3, shadowOffsetY: 3 },
-  { id: "amor", nombre: "Amor", texto: "Ama y sé feliz", estilo: "sacramento", color: "#FF6B6B", fontSize: 40, letterSpacing: 2, alignment: "center", shadow: true, shadowColor: "rgba(0,0,0,0.2)", shadowBlur: 4, shadowOffsetX: 1, shadowOffsetY: 1 },
+// 定义模板数据（保持不变）
+const PLANTILLAS_DESTACADAS = [
+   {
+    id: "boda",
+    nombre: "Invitación de Boda",
+    texto: "Juan & María",
+    estilo: "dancing-script",
+    color: "#5B4FBE",
+    fontSize: 32,
+    letterSpacing: 1,
+    alignment: "center",
+    shadow: true,
+    shadowColor: "rgba(0,0,0,0.3)",
+    shadowBlur: 4,
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+  },
+  {
+    id: "cumpleanos",
+    nombre: "Feliz Cumpleaños",
+    texto: "¡Feliz Cumpleaños!",
+    estilo: "pacifico",
+    color: "#FF6B6B",
+    fontSize: 28,
+    letterSpacing: 1,
+    alignment: "center",
+    shadow: true,
+    shadowColor: "rgba(0,0,0,0.2)",
+    shadowBlur: 5,
+    shadowOffsetX: 1,
+    shadowOffsetY: 1,
+  },
+  {
+    id: "navidad",
+    nombre: "Navidad",
+    texto: "¡Feliz Navidad!",
+    estilo: "lobster",
+    color: "#43A047",
+    fontSize: 30,
+    letterSpacing: 1,
+    alignment: "center",
+    shadow: true,
+    shadowColor: "#FF6B6B",
+    shadowBlur: 4,
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+  },
+  {
+    id: "logo",
+    nombre: "Logo Empresa",
+    texto: "Mi Empresa",
+    estilo: "caveat",
+    color: "#5B4FBE",
+    fontSize: 34,
+    letterSpacing: 2,
+    alignment: "center",
+    outline: true,
+    outlineColor: "#FFFFFF",
+    outlineWidth: 1,
+  },
+  {
+    id: "motivacion1",
+    nombre: "Motivación Diaria",
+    texto: "Nunca te rindas",
+    estilo: "permanent-marker",
+    color: "#E53935",
+    fontSize: 36,
+    letterSpacing: 1,
+    alignment: "center",
+    shadow: true,
+    shadowColor: "rgba(0,0,0,0.4)",
+    shadowBlur: 3,
+    shadowOffsetX: 3,
+    shadowOffsetY: 3,
+  },
+  {
+    id: "amor",
+    nombre: "Amor",
+    texto: "Ama y sé feliz",
+    estilo: "sacramento",
+    color: "#FF6B6B",
+    fontSize: 40,
+    letterSpacing: 2,
+    alignment: "center",
+    shadow: true,
+    shadowColor: "rgba(0,0,0,0.2)",
+    shadowBlur: 4,
+    shadowOffsetX: 1,
+    shadowOffsetY: 1,
+  },
 ];
 
-// RAZONES 数据结构定义，用于传递 props (实际图标在 WhyChooseUs 组件内部)
+// 定义 otros datos（保持不变）
 const RAZONES = [
-  { iconName: "Palette", titulo: "Diseño Intuitivo", descripcion: "Interfaz fácil de usar diseñada para todos los niveles de experiencia, desde principiantes hasta profesionales." },
-  { iconName: "Type", titulo: "Múltiples Estilos de Tipografía", descripcion: "Más de 10 estilos caligráficos diferentes para personalizar tus textos según la ocasión." },
-  { iconName: "Sliders", titulo: "Personalización Total", descripcion: "Ajusta tamaño, color, espaciado y añade efectos como sombras y contornos a tu gusto." },
-  { iconName: "Download", titulo: "Exportación Sencilla", descripcion: "Descarga tus creaciones en formato PNG o JPG para usarlas donde quieras." },
-  { iconName: "Save", titulo: "Totalmente Gratuito", descripcion: "Sin costos ocultos ni suscripciones. Crea todos los diseños que necesites sin límites." },
-  { iconName: "CheckCircle", titulo: "Sin Registro", descripcion: "Comienza a crear inmediatamente sin necesidad de registrarte o proporcionar datos personales." },
+  {
+    icon: <Palette className="h-8 w-8" />,
+    titulo: "Diseño Intuitivo",
+    descripcion:
+      "Interfaz fácil de usar diseñada para todos los niveles de experiencia, desde principiantes hasta profesionales.",
+  },
+  {
+    icon: <Type className="h-8 w-8" />,
+    titulo: "Múltiples Estilos de Tipografía",
+    descripcion: "Más de 10 estilos caligráficos diferentes para personalizar tus textos según la ocasión.",
+  },
+  {
+    icon: <Sliders className="h-8 w-8" />,
+    titulo: "Personalización Total",
+    descripcion: "Ajusta tamaño, color, espaciado y añade efectos como sombras y contornos a tu gusto.",
+  },
+  {
+    icon: <Download className="h-8 w-8" />,
+    titulo: "Exportación Sencilla",
+    descripcion: "Descarga tus creaciones en formato PNG o JPG para usarlas donde quieras.",
+  },
+  {
+    icon: <Save className="h-8 w-8" />,
+    titulo: "Totalmente Gratuito",
+    descripcion: "Sin costos ocultos ni suscripciones. Crea todos los diseños que necesites sin límites.",
+  },
+  {
+    icon: <CheckCircle className="h-8 w-8" />,
+    titulo: "Sin Registro",
+    descripcion: "Comienza a crear inmediatamente sin necesidad de registrarte o proporcionar datos personales.",
+  },
 ];
-// 注意：这里传递 iconName 字符串或保持原来的 ReactNode 都可以，取决于你在 WhyChooseUs 组件内部如何处理图标。
-// 如果 WhyChooseUs 内部直接导入并根据名字渲染图标，传名字更好。如果 WhyChooseUs 期望收到 ReactNode，则保持原来的图标实例。
-// 为了简单，我们假设 WhyChooseUs 期望收到 ReactNode，所以保持原来的定义，但确保 WhyChooseUs 也导入了这些图标。
-// **更新：** 为了更清晰地分离关注点，修改 RAZONES 结构，只传递数据，让 WhyChooseUs 负责图标。
-const RAZONES_DATA = RAZONES.map(({ icon, ...rest }) => rest); // 只传递 titulo 和 descripcion
 
-const PASOS_USO = [ // PASOS_USO 数据仍然需要，用于 HowToUse
-  { numero: 1, titulo: "Elige una plantilla o comienza desde cero", descripcion: "Selecciona una de nuestras plantillas prediseñadas o comienza con tu propio texto personalizado." },
-  { numero: 2, titulo: "Personaliza tu texto", descripcion: "Modifica el estilo de letra, tamaño, color y alineación según tus preferencias." },
-  { numero: 3, titulo: "Añade efectos especiales", descripcion: "Aplica sombras, contornos o rotación para dar un toque único a tu diseño." },
-  { numero: 4, titulo: "Exporta tu creación", descripcion: "Descarga tu diseño en formato PNG o JPG para usarlo en tus proyectos." },
+const PASOS_USO = [
+  {
+    numero: 1,
+    titulo: "Elige una plantilla o comienza desde cero",
+    descripcion: "Selecciona una de nuestras plantillas prediseñadas o comienza con tu propio texto personalizado.",
+  },
+  {
+    numero: 2,
+    titulo: "Personaliza tu texto",
+    descripcion: "Modifica el estilo de letra, tamaño, color y alineación según tus preferencias.",
+  },
+  {
+    numero: 3,
+    titulo: "Añade efectos especiales",
+    descripcion: "Aplica sombras, contornos o rotación para dar un toque único a tu diseño.",
+  },
+  {
+    numero: 4,
+    titulo: "Exporta tu creación",
+    descripcion: "Descarga tu diseño en formato PNG o JPG para usarlo en tus proyectos.",
+  },
 ];
 
-const PREGUNTAS_FRECUENTES = [ // PREGUNTAS_FRECUENTES 数据仍然需要，用于 FAQ Section
+const PREGUNTAS_FRECUENTES = [
  {
     pregunta: "¿Qué es el lettering y en qué se diferencia de la caligrafía?",
     respuesta:
@@ -105,11 +217,9 @@ const PREGUNTAS_FRECUENTES = [ // PREGUNTAS_FRECUENTES 数据仍然需要，用�
       "Puedes contactarnos a través de la sección de contacto o enviarnos un correo electrónico. Valoramos tus comentarios y trabajamos constantemente para mejorar nuestra herramienta.",
   },
 ];
-// --- END 数据定义 ---
-
 
 export default function ClientHome() {
-  // useInView Hooks 仍然需要，用于懒加载模板和FAQ
+  // const [fontsLoaded, setFontsLoaded] = useState(false) // <- REMOVED
   const [templatesSectionRef, templatesSectionInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -120,12 +230,14 @@ export default function ClientHome() {
     threshold: 0.1,
   });
 
+  // useEffect(() => { ... font loading logic ... }, []) // <- REMOVED
+
   return (
     <div className="flex flex-col min-h-screen">
       <SiteHeader />
 
       <main>
-        {/* Hero Section (保持不变) */}
+        {/* Hero Section - Updated with AnimatedLogo */}
         <section className="py-20 bg-gradient-to-b from-white to-[#F4F4F8]">
           <div className="container mx-auto px-4 text-center">
             <AnimatedLogo size={120} className="mb-6" />
@@ -151,16 +263,79 @@ export default function ClientHome() {
                 </Link>
               </Button>
             </div>
+           {/* 整个示例容器已被删除 */}
           </div>
         </section>
 
-        {/* --- 使用新的服务器组件 --- */}
-        <WhyChooseUs razones={RAZONES} /> {/* 传递原始 RAZONES 数据 */}
+        {/* Por qué elegirnos - NUEVA SECCIÓN */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">¿Por qué elegir nuestro Generador de Lettering?</h2>
+              <p className="text-lg text-[#9EA3B0] max-w-2xl mx-auto">
+                Nuestro generador de lettering ofrece una experiencia única con características diseñadas para hacer tu
+                proceso creativo más fácil y divertido.
+              </p>
+            </div>
 
-        {/* --- 使用新的服务器组件 --- */}
-        <HowToUse pasos={PASOS_USO} />
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {RAZONES.map((razon, index) => (
+                <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                      {razon.icon}
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">{razon.titulo}</h3>
+                    <p className="text-[#9EA3B0]">{razon.descripcion}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
 
-        {/* Plantillas Section (保持不变，仍然需要客户端交互) */}
+        {/* Cómo usar - NUEVA SECCIÓN */}
+        <section className="py-20 bg-[#F4F4F8]">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Cómo Usar Nuestro Generador de Lettering</h2>
+              <p className="text-lg text-[#9EA3B0] max-w-2xl mx-auto">
+                Sigue estos sencillos pasos para crear diseños de lettering impresionantes en minutos.
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              {PASOS_USO.map((paso, index) => (
+                <div key={index} className="flex mb-12 last:mb-0">
+                  <div className="mr-6">
+                    <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold">
+                      {paso.numero}
+                    </div>
+                    <div
+                      className={`h-full w-0.5 bg-primary/20 mx-auto ${
+                        index === PASOS_USO.length - 1 ? "hidden" : "block"
+                      }`}
+                    ></div>
+                  </div>
+                  <div className="flex-1 pt-2">
+                    <h3 className="text-xl font-bold mb-2">{paso.titulo}</h3>
+                    <p className="text-[#9EA3B0] mb-4">{paso.descripcion}</p>
+                    {index === PASOS_USO.length - 1 ? (
+                      <Button asChild>
+                        <Link href="/editor" className="gap-2">
+                          <Sparkles className="h-4 w-4" />
+                          Comenzar ahora
+                        </Link>
+                      </Button>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Plantillas Section - 使用视图检测懒加载 */}
         <section className="py-20" ref={templatesSectionRef}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-8">
@@ -171,7 +346,6 @@ export default function ClientHome() {
               </p>
             </div>
 
-            {/* 懒加载和 Suspense (保持不变) */}
             {templatesSectionInView ? (
               <Suspense
                 fallback={
@@ -213,7 +387,7 @@ export default function ClientHome() {
           </div>
         </section>
 
-        {/* FAQ Section (保持不变，仍然需要客户端交互) */}
+        {/* FAQ Section - 使用视图检测懒加载 */}
         <section className="py-20" id="faq" ref={faqSectionRef}>
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
@@ -223,7 +397,6 @@ export default function ClientHome() {
               </p>
             </div>
 
-             {/* 懒加载 (保持不变) */}
             {faqSectionInView && (
               <div className="max-w-3xl mx-auto">
                 <Card className="border-none shadow-lg">
@@ -250,18 +423,31 @@ export default function ClientHome() {
                 </div>
               </div>
             )}
-             {/* Placeholder (保持不变) */}
+             {/* Conditional rendering for placeholder/spinner if needed */}
              {!faqSectionInView && (
                <div className="min-h-[400px] flex items-center justify-center">
-                 {/* Spinner Placeholder */}
+                 {/* Puedes poner un spinner o dejarlo vacío */}
                </div>
              )}
           </div>
         </section>
 
-        {/* --- 使用新的服务器组件 --- */}
-        <CtaSection />
-
+        {/* CTA Section */}
+        <section className="py-20 bg-primary text-white">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl font-bold mb-6">¿Listo para crear tu lettering personalizado?</h2>
+            <p className="text-lg max-w-2xl mx-auto mb-10 text-white/80">
+              Comienza a diseñar textos únicos, letras decoradas y tipografías creativas para tus proyectos, redes
+              sociales o cualquier ocasión especial.
+            </p>
+            <Button size="lg" variant="secondary" asChild>
+              <Link href="/editor" className="gap-2">
+                <Sparkles className="h-5 w-5" />
+                Ir al Editor de Lettering
+              </Link>
+            </Button>
+          </div>
+        </section>
       </main>
 
       <SiteFooter />
