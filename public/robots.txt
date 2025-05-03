@@ -1,0 +1,45 @@
+# Robots.txt para Generador de Lettering
+User-agent: *
+Allow: /
+
+# Rutas específicas
+Allow: /editor
+Allow: /plantillas
+Allow: /acerca
+Allow: /contacto
+Allow: /privacidad
+
+# Rutas restringidas
+Disallow: /api/
+Disallow: /_next/
+
+# Sitemap
+Sitemap: https://generador-lettering.vercel.app/sitemap.xml
+
+# Tiempos de rastreo
+Crawl-delay: 5
+
+# Directivas específicas para bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+User-agent: Yandex
+Allow: /
+Crawl-delay: 2

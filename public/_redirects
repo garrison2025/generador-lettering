@@ -1,0 +1,9 @@
+# Redirecciones para SEO
+/editor  /editor  200
+/plantillas  /plantillas  200
+/acerca  /acerca  200
+/contacto  /contacto  200
+/privacidad  /privacidad  200
+
+# Redirección de fallback
+/*  /index.html  200
