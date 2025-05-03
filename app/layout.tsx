@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    "google-site-verification": "your-verification-code", // 请替换成你的 Google 验证码
+    "google-site-verification": "5Fg8Nv7tz4ioNMiGxduGbA7Fby2Y5KHTirnZOfIPExM", // 请替换成你的 Google 验证码
   },
     generator: 'v0.dev'
 }
