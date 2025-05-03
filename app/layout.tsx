@@ -1,23 +1,22 @@
-import type React from "react"
-import "@/app/globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Inter } from "next/font/google"
-import type { Metadata } from "next"
-import { Toaster } from "@/components/ui/toaster"
-import { SchemaMarkup } from "@/components/seo/schema-markup"
-import { FontLoader } from "@/components/font-loader"
+import type React from "react";
+import "@/app/globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Inter } from "next/font/google";
+import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
+import { SchemaMarkup } from "@/components/seo/schema-markup";
+import { FontLoader } from "@/components/font-loader"; // 你原有的 FontLoader 组件
 
-// 优化字体加载，使用可变字体减少文件大小
+// 优化字体加载，使用可变字体减少文件大小 (这是你的基础字体 Inter)
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   preload: true,
   fallback: ["system-ui", "sans-serif"],
   adjustFontFallback: true,
-})
+});
 
-// --- 修改后的 Metadata ---
-// 注意：viewport 和 themeColor 已从此对象中移除
+// --- Metadata (保持不变) ---
 export const metadata: Metadata = {
   metadataBase: new URL("https://generadordelettering.org"),
   title: "Generador de Lettering - Crea diseños tipográficos únicos y letras personalizadas",
@@ -74,7 +73,6 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
-  // viewport 和 themeColor 已移除
   verification: {
     google: "5Fg8Nv7tz4ioNMiGxduGbA7Fby2Y5KHTirnZOfIPExM", // 请替换成你的 Google 验证码
   },
@@ -91,18 +89,18 @@ export const metadata: Metadata = {
   other: {
     "google-site-verification": "5Fg8Nv7tz4ioNMiGxduGbA7Fby2Y5KHTirnZOfIPExM", // 请替换成你的 Google 验证码
   },
-    generator: 'v0.dev'
-}
+  generator: 'v0.dev'
+};
 
-// --- 新增的独立 Viewport 导出 ---
+// --- Viewport (保持不变) ---
 export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#5B4FBE", // themeColor 移到这里
+  themeColor: "#5B4FBE",
 };
 
-// --- RootLayout 组件定义保持不变 ---
+// --- RootLayout 组件定义 ---
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -111,14 +109,29 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning className="scroll-smooth">
       <head>
+        {/* --- START: 添加这些用于加载 Lettering 字体的 Link 标签 --- */}
+        {/* 告诉浏览器尽快连接到 Google Fonts 服务器 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* 直接加载你需要的 Lettering 字体 CSS 文件 */}
+        <link
+          href="https://fonts.googleapis.com/css2?display=swap&family=Dancing+Script:wght@400;700&family=Pacifico&family=Satisfy&family=Sacramento&family=Great+Vibes&family=Amatic+SC:wght@400;700&family=Lobster&family=Caveat:wght@400;700&family=Kaushan+Script&family=Permanent+Marker"
+          rel="stylesheet"
+        />
+        {/* --- END: 添加这些用于加载 Lettering 字体的 Link 标签 --- */}
+
+        {/* --- 你原有的其他 head 内容 --- */}
         <SchemaMarkup />
-        <FontLoader />
+        <FontLoader /> {/* 你的 FontLoader 组件 */}
         {/* Preload logo images for faster rendering */}
         <link rel="preload" href="/logo-light.png" as="image" />
         <link rel="preload" href="/logo-dark.png" as="image" />
+        {/* 你原有的 dns-prefetch, 保留它们没问题 */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        {/* --- END 你原有的其他 head 内容 --- */}
       </head>
+      {/* 应用基础字体 Inter 到 body */}
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           {children}
@@ -126,5 +139,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
