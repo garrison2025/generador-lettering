@@ -1,21 +1,22 @@
-"use client"
+"use client";
 
-import { useEffect, useState, Suspense } from "react"
-import { Button } from "@/components/ui/button"
-import { Sparkles, Download, Palette, Type, BookOpen, CheckCircle, HelpCircle, Sliders, Save } from "lucide-react"
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { InteractiveLetteringPreview } from "@/components/interactive-lettering-preview"
-import { TemplatesCarousel } from "@/components/templates-carousel"
-import { motion } from "framer-motion"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { useInView } from "react-intersection-observer"
-import { AnimatedLogo } from "@/components/animated-logo"
+// 注意：useState 和 useEffect 已经被移除
+import { Suspense } from "react"; // useEffect, useState 已移除
+import { Button } from "@/components/ui/button";
+import { Sparkles, Download, Palette, Type, BookOpen, CheckCircle, HelpCircle, Sliders, Save } from "lucide-react";
+import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { InteractiveLetteringPreview } from "@/components/interactive-lettering-preview";
+import { TemplatesCarousel } from "@/components/templates-carousel";
+import { motion } from "framer-motion";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useInView } from "react-intersection-observer";
+import { AnimatedLogo } from "@/components/animated-logo";
 
-// 定义字体和模板数据
+// 定义字体和模板数据 (保持不变)
 const FONTS = [
   { id: "dancing-script", name: "Caligrafía Elegante", family: "'Dancing Script', cursive" },
   { id: "pacifico", name: "Script Moderno", family: "'Pacifico', cursive" },
@@ -27,11 +28,11 @@ const FONTS = [
   { id: "caveat", name: "Escritura Natural", family: "'Caveat', cursive" },
   { id: "kaushan-script", name: "Script Dinámico", family: "'Kaushan Script', cursive" },
   { id: "permanent-marker", name: "Marcador", family: "'Permanent Marker', cursive" },
-]
+];
 
 // 定义模板数据（保持不变）
 const PLANTILLAS_DESTACADAS = [
-  {
+   {
     id: "boda",
     nombre: "Invitación de Boda",
     texto: "Juan & María",
@@ -119,7 +120,7 @@ const PLANTILLAS_DESTACADAS = [
     shadowOffsetX: 1,
     shadowOffsetY: 1,
   },
-]
+];
 
 // 定义 otros datos（保持不变）
 const RAZONES = [
@@ -154,7 +155,7 @@ const RAZONES = [
     titulo: "Sin Registro",
     descripcion: "Comienza a crear inmediatamente sin necesidad de registrarte o proporcionar datos personales.",
   },
-]
+];
 
 const PASOS_USO = [
   {
@@ -177,10 +178,10 @@ const PASOS_USO = [
     titulo: "Exporta tu creación",
     descripcion: "Descarga tu diseño en formato PNG o JPG para usarlo en tus proyectos.",
   },
-]
+];
 
 const PREGUNTAS_FRECUENTES = [
-  {
+ {
     pregunta: "¿Qué es el lettering y en qué se diferencia de la caligrafía?",
     respuesta:
       "El lettering es el arte de dibujar letras, mientras que la caligrafía es el arte de escribirlas. Nuestro generador de lettering te permite crear diseños tipográficos únicos sin necesidad de habilidades avanzadas de dibujo o caligrafía.",
@@ -215,34 +216,21 @@ const PREGUNTAS_FRECUENTES = [
     respuesta:
       "Puedes contactarnos a través de la sección de contacto o enviarnos un correo electrónico. Valoramos tus comentarios y trabajamos constantemente para mejorar nuestra herramienta.",
   },
-]
+];
 
 export default function ClientHome() {
-  const [fontsLoaded, setFontsLoaded] = useState(false)
+  // const [fontsLoaded, setFontsLoaded] = useState(false) // <- REMOVED
   const [templatesSectionRef, templatesSectionInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
-  })
+  });
 
   const [faqSectionRef, faqSectionInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
-  })
+  });
 
-  // 优化字体加载
-  useEffect(() => {
-    // 只在需要时加载字体
-    const link = document.createElement("link")
-    link.href =
-      "https://fonts.googleapis.com/css2?display=swap&family=Dancing+Script:wght@400;700&family=Pacifico&family=Satisfy&family=Sacramento&family=Great+Vibes&family=Amatic+SC:wght@400;700&family=Lobster&family=Caveat:wght@400;700&family=Kaushan+Script&family=Permanent+Marker&display=swap"
-    link.rel = "stylesheet"
-    link.onload = () => setFontsLoaded(true)
-    document.head.appendChild(link)
-
-    return () => {
-      document.head.removeChild(link)
-    }
-  }, [])
+  // useEffect(() => { ... font loading logic ... }, []) // <- REMOVED
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -368,10 +356,10 @@ export default function ClientHome() {
               >
                 <TemplatesCarousel itemsPerView={3}>
                   {PLANTILLAS_DESTACADAS.map((plantilla) => {
-                    const font = FONTS.find((f) => f.id === plantilla.estilo) || FONTS[0]
+                    const font = FONTS.find((f) => f.id === plantilla.estilo) || FONTS[0];
                     return (
                       <InteractiveLetteringPreview key={plantilla.id} template={plantilla} fontFamily={font.family} />
-                    )
+                    );
                   })}
                 </TemplatesCarousel>
               </Suspense>
@@ -435,6 +423,12 @@ export default function ClientHome() {
                 </div>
               </div>
             )}
+             {/* Conditional rendering for placeholder/spinner if needed */}
+             {!faqSectionInView && (
+               <div className="min-h-[400px] flex items-center justify-center">
+                 {/* Puedes poner un spinner o dejarlo vacío */}
+               </div>
+             )}
           </div>
         </section>
 
@@ -458,5 +452,5 @@ export default function ClientHome() {
 
       <SiteFooter />
     </div>
-  )
+  );
 }
