@@ -76,7 +76,7 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   // viewport 和 themeColor 已移除
   verification: {
-    google: "google-site-verification-code", // 请替换成你的 Google 验证码
+    google: "5Fg8Nv7tz4ioNMiGxduGbA7Fby2Y5KHTirnZOfIPExM", // 请替换成你的 Google 验证码
   },
   robots: {
     index: true,
