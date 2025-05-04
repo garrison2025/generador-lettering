@@ -2,68 +2,71 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
                             http://www.google.com/schemas/sitemap-image/1.1
                             http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
+
   <url>
-    <loc>https://generador-lettering.pages.dev/</loc>
-    <lastmod>2023-05-01</lastmod>
+    <loc>https://generadordelettering.org/</loc>
+    <lastmod>2023-05-01</lastmod> <!-- Recomendación: Actualiza esta fecha a la última modificación real -->
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://generador-lettering.pages.dev/og-image.png</image:loc>
+      <image:loc>https://generadordelettering.org/og-image.png</image:loc>
       <image:title>Generador de Lettering - Página Principal</image:title>
       <image:caption>Herramienta para crear lettering personalizado</image:caption>
     </image:image>
-    <mobile:mobile/>
   </url>
+
   <url>
-    <loc>https://generador-lettering.pages.dev/editor</loc>
-    <lastmod>2023-05-01</lastmod>
+    <loc>https://generadordelettering.org/editor</loc>
+    <lastmod>2023-05-01</lastmod> <!-- Recomendación: Actualiza esta fecha -->
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://generador-lettering.pages.dev/editor-preview.png</image:loc>
+      <image:loc>https://generadordelettering.org/editor-preview.png</image:loc>
       <image:title>Editor de Lettering</image:title>
       <image:caption>Crea diseños de lettering personalizados</image:caption>
     </image:image>
-    <mobile:mobile/>
   </url>
+
   <url>
-    <loc>https://generador-lettering.pages.dev/plantillas</loc>
-    <lastmod>2023-05-01</lastmod>
+    <loc>https://generadordelettering.org/plantillas</loc>
+    <lastmod>2023-05-01</lastmod> <!-- Recomendación: Actualiza esta fecha -->
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://generador-lettering.pages.dev/plantillas-preview.png</image:loc>
+      <image:loc>https://generadordelettering.org/plantillas-preview.png</image:loc>
       <image:title>Plantillas de Lettering</image:title>
       <image:caption>Explora plantillas prediseñadas de lettering</image:caption>
     </image:image>
-    <mobile:mobile/>
   </url>
+
   <url>
-    <loc>https://generador-lettering.pages.dev/acerca</loc>
-    <lastmod>2023-05-01</lastmod>
+    <loc>https://generadordelettering.org/acerca</loc>
+    <lastmod>2023-05-01</lastmod> <!-- Recomendación: Actualiza esta fecha -->
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <mobile:mobile/>
+    <!-- Nota: No se especificó imagen para esta página, lo cual está bien si no es visualmente relevante -->
   </url>
+
   <url>
-    <loc>https://generador-lettering.pages.dev/contacto</loc>
-    <lastmod>2023-05-01</lastmod>
+    <loc>https://generadordelettering.org/contacto</loc>
+    <lastmod>2023-05-01</lastmod> <!-- Recomendación: Actualiza esta fecha -->
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <mobile:mobile/>
+    <!-- Nota: No se especificó imagen para esta página -->
   </url>
+
   <url>
-    <loc>https://generador-lettering.pages.dev/privacidad</loc>
-    <lastmod>2023-05-01</lastmod>
+    <loc>https://generadordelettering.org/privacidad</loc>
+    <lastmod>2023-05-01</lastmod> <!-- Recomendación: Actualiza esta fecha -->
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
-    <mobile:mobile/>
+    <!-- Nota: No se especificó imagen para esta página -->
   </url>
+
+  <!-- Recomendación: Añade aquí cualquier otra URL importante de tu sitio que quieras indexar -->
+
 </urlset>
