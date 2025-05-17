@@ -1,4 +1,3 @@
-// app/layout.tsx
 import type React from "react";
 import "@/app/globals.css"; // 确保你的全局 CSS 路径正确
 import { ThemeProvider } from "@/components/theme-provider"; // 确保路径正确
