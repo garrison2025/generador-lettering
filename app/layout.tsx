@@ -27,17 +27,17 @@ const inter = Inter({
   variable: "--font-inter",
   fallback: ["system-ui", "arial", "sans-serif"],
   adjustFontFallback: true,
-  preload: false, // 调整：如果 Roboto 是更关键的 LCP/首屏字体，Inter 可以不预加载
+  preload: false,
 });
 
 // Roboto 字体 (你的 H1 和 LCP <p> 元素使用的字体)
 const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["400", "700"], // 调整：只加载实际用到的字重 (例如常规和粗体)
+  weight: ["400", "700"],
   display: "swap",
   variable: "--font-roboto",
   fallback: ["helvetica", "arial", "sans-serif"],
-  preload: true, // 保持预加载，因为它是 LCP 和主要标题的字体
+  preload: true,
 });
 
 // Lettering 艺术字体 (保持 preload: false)
@@ -216,17 +216,21 @@ export default function RootLayout({
     <html
       lang="es"
       suppressHydrationWarning
-      // 将所有字体变量添加到html标签，以便全局可用
       className={`scroll-smooth ${inter.variable} ${roboto.variable} ${dancingScript.variable} ${pacifico.variable} ${satisfy.variable} ${sacramento.variable} ${greatVibes.variable} ${amaticSC.variable} ${lobster.variable} ${caveat.variable} ${kaushanScript.variable} ${permanentMarker.variable}`}
     >
       <head>
-        {/*
-          移除了原有的 Google Fonts <link> 标签。
-          移除了原有的 FontLoader 组件。
-        */}
+        {/* 移除了原有的 Google Fonts <link> 标签和 FontLoader 组件 */}
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* START: 添加 Google AdSense 代码段 */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1528586776567779" // 这是您提供的 AdSense 代码
+          crossOrigin="anonymous"
+        ></script>
+        {/* END: 添加 Google AdSense 代码段 */}
 
         <SchemaMarkup />
 
