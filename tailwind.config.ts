@@ -1,6 +1,4 @@
-// tailwind.config.ts
-import type { Config } from "tailwindcss";
-const { fontFamily } = require('tailwindcss/defaultTheme'); // 导入 Tailwind 的默认字体族
+import type { Config } from "tailwindcss"
 
 const config: Config = {
   darkMode: ["class"],
@@ -9,7 +7,7 @@ const config: Config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
-    "*.{js,ts,jsx,tsx,mdx}", // 您原有的配置
+    "*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     container: {
@@ -20,18 +18,6 @@ const config: Config = {
       },
     },
     extend: {
-      fontFamily: {
-        // 将通过 next/font 加载的 Roboto (CSS 变量 --font-roboto)
-        // 设置为默认无衬线字体 (sans) 的首选字体。
-        // 这意味着任何使用 font-sans 或未明确指定字体的元素，
-        // 都会优先尝试使用 var(--font-roboto)。
-        sans: ['var(--font-roboto)', ...fontFamily.sans],
-
-        // (可选) 如果您也为 Inter 创建了 CSS 变量 (例如 --font-inter)
-        // 并且希望在某些地方明确使用 Inter，可以这样定义：
-        // inter: ['var(--font-inter)', ...fontFamily.sans],
-        // 然后可以在 HTML 中使用例如: className="font-inter"
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
