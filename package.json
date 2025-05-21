@@ -42,17 +42,17 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
-    "date-fns": "4.1.0",
+    "date-fns": "^3.6.0",             // <--- 修改点：从 "4.1.0" 改为 "^3.6.0"
     "embla-carousel-react": "8.5.1",
     "framer-motion": "latest",
     "html2canvas": "latest",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
-    "next": "15.2.4",
+    "next": "15.2.4",                // 保持
     "next-themes": "latest",
-    "react": "^18.2.0",
-    "react-day-picker": "8.10.1",
-    "react-dom": "^18.2.0",
+    "react": "^18.2.0",               // 保持
+    "react-day-picker": "8.10.1",     // 保持
+    "react-dom": "^18.2.0",           // 保持
     "react-hook-form": "^7.54.1",
     "react-intersection-observer": "latest",
     "react-resizable-panels": "^2.1.7",
@@ -65,8 +65,8 @@
   },
   "devDependencies": {
     "@types/node": "^22",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^18.2.0",       // 保持
+    "@types/react-dom": "^18.2.0",    // 保持
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
