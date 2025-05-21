@@ -1,14 +1,15 @@
 "use client"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/use-mobile" // 尽管我们不用它的返回值了，但导入通常会保留
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 
 // Resto del código del editor...
 
 export default function EditorClient() {
   // Mantener el código existente...
-  const isMobile = useIsMobile()
+  // const isMobile = useIsMobile() // 原来的代码被注释掉了
+  const isMobile = false;          // 强制 isMobile 为 false
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -35,6 +36,7 @@ export default function EditorClient() {
           {/* Resto del código del editor... */}
 
           {/* Añadir contenido rico en palabras clave */}
+          {/* 因为 isMobile 现在总是 false, 所以这部分理论上总是会渲染 (如果在 lg 断点以上) */}
           {!isMobile && (
             <div className="mt-8">
               <h2 className="text-2xl font-semibold mb-4">Crea Lettering Personalizado</h2>
