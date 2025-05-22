@@ -15,7 +15,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { TouchSlider } from "@/components/ui/touch-slider"
-import { TouchColorPicker } from "@/components/ui/touch-color-picker"; // <--- 1. 确保 TouchColorPicker 已导入
+import { TouchColorPicker } from "@/components/ui/touch-color-picker";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 
 // FONTS, COLORS, PLANTILLAS 常量定义 (来自你提供的完整原始代码)
@@ -57,7 +57,8 @@ export default function EditorClient() {
   const [text, setText] = useState("Tu texto aquí"); const [fontSize, setFontSize] = useState(60);
   const [color, setColor] = useState("#5B4FBE");
   const [alignment, setAlignment] = useState("center");
-  const [letterSpacing, setLetterSpacing] = useState(0); const [lineHeight, setLineHeight] = useState(1.5);
+  const [letterSpacing, setLetterSpacing] = useState(0); // state for letter spacing
+  const [lineHeight, setLineHeight] = useState(1.5);
   const [rotation, setRotation] = useState(0); const [font, setFont] = useState(FONTS[0].id);
   const [shadow, setShadow] = useState(false); const [shadowColor, setShadowColor] = useState("#000000");
   const [shadowBlur, setShadowBlur] = useState(5); const [shadowOffsetX, setShadowOffsetX] = useState(2);
@@ -66,20 +67,21 @@ export default function EditorClient() {
   const [isExporting, setIsExporting] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { console.log("STAGE 2d (Only ColorPicker): Font loading useEffect - DOM manipulation COMMENTED OUT."); }, []);
+  useEffect(() => { console.log("STAGE 2d (Letter Spacing Slider): Font loading useEffect - DOM manipulation COMMENTED OUT."); }, []);
   useEffect(() => { if (plantillaId) { const plantilla = PLANTILLAS.find((p) => p.id === plantillaId); if (plantilla) { setText(plantilla.texto); setFont(plantilla.estilo); setFontSize(plantilla.fontSize); setColor(plantilla.color); setAlignment(plantilla.alignment); setLetterSpacing(plantilla.letterSpacing); setLineHeight(plantilla.lineHeight); setRotation(plantilla.rotation); setShadow(plantilla.shadow); if (plantilla.shadow) { setShadowColor(plantilla.shadowColor || "#000000"); setShadowBlur(plantilla.shadowBlur || 0); setShadowOffsetX(plantilla.shadowOffsetX || 0); setShadowOffsetY(plantilla.shadowOffsetY || 0); } setOutline(plantilla.outline); if (plantilla.outline) { setOutlineColor(plantilla.outlineColor || "#FFFFFF"); setOutlineWidth(plantilla.outlineWidth || 0); } } } }, [plantillaId]);
 
   const currentFont = FONTS.find((f) => f.id === font) || FONTS[0];
   const textStyle: React.CSSProperties = {
     fontFamily: currentFont.family, fontSize: `${fontSize}px`, color: color,
     textAlign: alignment as "left" | "center" | "right",
-    letterSpacing: `${letterSpacing}px`, lineHeight: lineHeight, transform: `rotate(${rotation}deg)`,
+    letterSpacing: `${letterSpacing}px`, // Uses letterSpacing state
+    lineHeight: lineHeight, transform: `rotate(${rotation}deg)`,
     textShadow: shadow ? `${shadowOffsetX}px ${shadowOffsetY}px ${shadowBlur}px ${shadowColor}` : "none",
     WebkitTextStroke: outline ? `${outlineWidth}px ${outlineColor}` : "none",
     padding: "20px", maxWidth: "100%", wordWrap: "break-word",
   };
 
-  console.log("STAGE 2d (Only ColorPicker): Testing if adding ONLY TouchColorPicker to Estilo tab causes issues.");
+  console.log("STAGE 2d (Letter Spacing Slider): Testing TouchSlider for Letter Spacing.");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -93,25 +95,30 @@ export default function EditorClient() {
             <Tabs defaultValue="texto" className="w-full">
               <TabsList> <TabsTrigger value="texto">Texto</TabsTrigger> <TabsTrigger value="estilo">Estilo</TabsTrigger> <TabsTrigger value="efectos">Efectos</TabsTrigger> </TabsList>
               <TabsContent value="texto" className="space-y-4 mt-4">
-                {/* "Texto" 选项卡的完整内容保持不变 (Textarea, Select for Font, TouchSlider for Size, Alignment Buttons) */}
                 <div className="space-y-2"> <Label htmlFor="text-input">Texto para Lettering</Label> <Textarea id="text-input" value={text} onChange={(e) => setText(e.target.value)} placeholder="Escribe tu texto aquí" className="resize-none" rows={3} /> </div>
                 <div className="space-y-2"> <Label htmlFor="font-select">Estilo de Letra</Label> <Select value={font} onValueChange={setFont}> <SelectTrigger id="font-select"><SelectValue placeholder="Selecciona un estilo" /></SelectTrigger> <SelectContent>{FONTS.map((fontItem) => (<SelectItem key={fontItem.id} value={fontItem.id}>{fontItem.name}</SelectItem>))}</SelectContent> </Select> </div>
                 <TouchSlider label="Tamaño" min={10} max={200} step={1} value={fontSize} onChange={setFontSize} unit="px" />
                 <div className="space-y-2"> <Label>Alineación</Label> <div className="flex gap-2"> <Button variant={alignment === "left" ? "default" : "outline"} size="sm" onClick={() => setAlignment("left")} className="flex-1"> <AlignLeft className="h-4 w-4" /> </Button> <Button variant={alignment === "center" ? "default" : "outline"} size="sm" onClick={() => setAlignment("center")} className="flex-1"> <AlignCenter className="h-4 w-4" /> </Button> <Button variant={alignment === "right" ? "default" : "outline"} size="sm" onClick={() => setAlignment("right")} className="flex-1"> <AlignRight className="h-4 w-4" /> </Button> </div> </div>
               </TabsContent>
 
-              {/* 2. 在 "Estilo" 选项卡中只添加 TouchColorPicker */}
               <TabsContent value="estilo" className="space-y-4 mt-4">
                 <div className="space-y-2">
                   <Label htmlFor="color-select-estilo">Color del Texto</Label>
-                  <TouchColorPicker
-                    value={color} // 使用现有的 color state
-                    onChange={setColor} // 使用现有的 setColor
-                    presetColors={COLORS.map((c) => c.value)} // 使用 COLORS 常量
-                  />
+                  <TouchColorPicker value={color} onChange={setColor} presetColors={COLORS.map((c) => c.value)} />
                 </div>
-                {/* 其他 "Estilo" 选项卡的 TouchSlider 和 Button 暂时不加 */}
-                <p style={{color:"darkcyan", fontWeight:"bold"}}>ONLY TouchColorPicker added to Estilo Tab for this test.</p>
+
+                {/* 1. 添加用于“字间距”的 TouchSlider */}
+                <TouchSlider
+                  label="Espaciado entre Letras"
+                  min={-5}
+                  max={20}
+                  step={0.5}
+                  value={letterSpacing}
+                  onChange={setLetterSpacing}
+                  unit="px"
+                />
+                {/* 其他 "Estilo" 选项卡的 LineHeight Slider, Rotation Slider 和 Button 暂时不加 */}
+                <p style={{color:"darkorange", fontWeight:"bold"}}>Letter Spacing Slider added. Others in Estilo Tab still pending.</p>
               </TabsContent>
 
               <TabsContent value="efectos" className="space-y-4 mt-4"> <p>Contenido de Efectos (aún no implementado)</p> </TabsContent>
@@ -119,7 +126,7 @@ export default function EditorClient() {
           </div>
 
           <div style={{border: '1px solid lightskyblue', padding: '10px', background: '#f0f8ff'}}>
-            <h3 className="text-lg font-semibold mb-2">Vista Previa (Stage 2d - Only ColorPicker)</h3>
+            <h3 className="text-lg font-semibold mb-2">Vista Previa (Stage 2d - Letter Spacing)</h3>
             <div style={textStyle}> {text || "Escribe algo..."} </div>
           </div>
           {!isMobile && ( /* 完整的 SEO 内容块 */
@@ -138,7 +145,7 @@ export default function EditorClient() {
             </div>
           )}
         </div>
-        <p style={{color: 'navy', marginTop: '20px', textAlign: 'center', fontWeight: 'bold'}}>STAGE 2d TEST (Only ColorPicker in Estilo Tab): Checking for build/runtime errors.</p>
+        <p style={{color: 'darkgoldenrod', marginTop: '20px', textAlign: 'center', fontWeight: 'bold'}}>STAGE 2d TEST (Adding Letter Spacing Slider): Checking for build/runtime errors.</p>
       </main>
       <SiteFooter />
     </div>
