@@ -278,6 +278,7 @@ export default function EditorClient() {
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
+  // 状态
   const [text, setText] = useState("Tu texto aquí");
   const [fontSize, setFontSize] = useState(60);
   const [color, setColor] = useState("#5B4FBE");
@@ -287,6 +288,7 @@ export default function EditorClient() {
   const [rotation, setRotation] = useState(0);
   const [font, setFont] = useState(FONTS[0].id);
 
+  // 效果状态
   const [shadow, setShadow] = useState(false);
   const [shadowColor, setShadowColor] = useState("#000000");
   const [shadowBlur, setShadowBlur] = useState(5);
@@ -297,20 +299,25 @@ export default function EditorClient() {
   const [outlineColor, setOutlineColor] = useState("#FFFFFF");
   const [outlineWidth, setOutlineWidth] = useState(2);
 
+  // 导出状态
   const [isExporting, setIsExporting] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
+  // 加载字体
   useEffect(() => {
     const existingLink = document.querySelector('link[href*="fonts.googleapis.com/css2"]');
     if (!existingLink) {
         const link = document.createElement("link");
-        // 这个链接已经包含了原始版本的所有字体
         link.href = "https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pacifico&family=Satisfy&family=Sacramento&family=Great+Vibes&family=Amatic+SC:wght@400;700&family=Lobster&family=Caveat:wght@400;700&family=Kaushan+Script&family=Permanent+Marker&display=swap";
         link.rel = "stylesheet";
         document.head.appendChild(link);
     }
+    // 注意：原始版本有清理函数，这里为了保持与之前稳定版本的风格一致，暂时未添加。
+    // 如果需要，可以添加清理函数：
+    // return () => { if (link.parentNode) link.parentNode.removeChild(link); };
   }, []);
 
+  // 从URL加载模板
   useEffect(() => {
     if (plantillaId) {
       const plantilla = PLANTILLAS.find((p) => p.id === plantillaId);
@@ -331,8 +338,10 @@ export default function EditorClient() {
     }
   }, [plantillaId]);
 
+  // 获取当前字体
   const currentFont = FONTS.find((f) => f.id === font) || FONTS[0];
 
+  // 生成文本样式
   const textStyle: React.CSSProperties = {
     fontFamily: currentFont.family, fontSize: `${fontSize}px`, color: color,
     textAlign: alignment, letterSpacing: `${letterSpacing}px`, lineHeight: lineHeight,
@@ -342,12 +351,12 @@ export default function EditorClient() {
     padding: "20px", maxWidth: "100%", wordWrap: "break-word",
   };
 
+  // 导出为图片
   const exportAsImage = async (type: "png" | "jpg") => {
     if (!previewRef.current) {
       toast({ title: "Error de Vista Previa", description: "No se encontró el elemento de vista previa.", variant: "destructive" });
       return;
     }
-
     try {
       setIsExporting(true);
       const options = {
@@ -381,6 +390,50 @@ export default function EditorClient() {
     }
   };
 
+  // --- 新增功能 ---
+  const handleReset = () => {
+    setText(""); // 原始版本重置文本为空字符串
+    setFont(FONTS[0].id);
+    setFontSize(60);
+    setColor("#5B4FBE");
+    setAlignment("center");
+    setLetterSpacing(0);
+    setLineHeight(1.5);
+    setRotation(0);
+    setShadow(false);
+    setOutline(false);
+    // 重置阴影和轮廓的详细参数 (如果需要，可以设为默认值)
+    setShadowColor("#000000");
+    setShadowBlur(5);
+    setShadowOffsetX(2);
+    setShadowOffsetY(2);
+    setOutlineColor("#FFFFFF");
+    setOutlineWidth(2);
+    toast({ title: "Reiniciado", description: "El diseño ha sido reiniciado a los valores por defecto." });
+  };
+
+  const handleRandomize = () => {
+    const randomFont = FONTS[Math.floor(Math.random() * FONTS.length)];
+    const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+    setFont(randomFont.id);
+    setColor(randomColor.value);
+    setFontSize(Math.floor(Math.random() * (120 - 40 + 1)) + 40); // 40-120px
+    setLetterSpacing(Math.floor(Math.random() * 11) - 5);      // -5 to 5px
+    setLineHeight(parseFloat((Math.random() * (2.5 - 0.8) + 0.8).toFixed(1))); // 0.8 to 2.5
+    setRotation(Math.floor(Math.random() * 41) - 20);            // -20 to 20 degrees
+    setShadow(Math.random() > 0.5); // 50% 几率开启阴影
+    setOutline(Math.random() > 0.5); // 50% 几率开启轮廓
+    toast({ title: "¡Aleatorio!", description: "Se ha generado un diseño aleatorio." });
+  };
+
+  const saveDesign = () => {
+    toast({
+      title: "Función no disponible",
+      description: "Esta funcionalidad requiere un sistema de cuentas de usuario.",
+      variant: "destructive",
+    });
+  };
+  // --- 结束新增功能 ---
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -452,6 +505,26 @@ export default function EditorClient() {
                     {text || "Escribe algo..."}
                   </div>
                 </div>
+
+                {/* --- 新增按钮区域 --- */}
+                <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2"> {/* 调整为2列以便按钮更大 */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleReset}
+                  >
+                    Reiniciar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRandomize}
+                  >
+                    Aleatorio
+                  </Button>
+                </div>
+                {/* --- 结束新增按钮区域 --- */}
+
               </CardContent>
             </Card>
 
@@ -461,7 +534,7 @@ export default function EditorClient() {
                   <CardContent className="pt-6">
                     <h3 className="text-xl font-semibold mb-3">Plantillas Populares</h3>
                     <ul className="space-y-2">
-                      {PLANTILLAS.slice(0, 4).map(p => ( // 显示前4个模板示例
+                      {PLANTILLAS.slice(0, 4).map(p => (
                         <li key={p.id}>
                           <Link href={`/editor?plantilla=${p.id}`} className="text-blue-600 hover:underline">
                             {p.nombre}
