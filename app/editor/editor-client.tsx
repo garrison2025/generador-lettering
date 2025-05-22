@@ -26,25 +26,13 @@ const FONTS = [
   { id: "dancing-script", name: "Caligrafía Elegante", family: "'Dancing Script', cursive" },
   { id: "pacifico", name: "Script Moderno", family: "'Pacifico', cursive" },
   { id: "permanent-marker", name: "Marcador", family: "'Permanent Marker', cursive" },
-  { id: "satisfy", name: "Caligrafía Fluida", family: "'Satisfy', cursive" },
-  { id: "sacramento", name: "Lettering Fino", family: "'Sacramento', cursive" },
-  { id: "great-vibes", name: "Caligrafía Clásica", family: "'Great Vibes', cursive" },
-  { id: "amatic-sc", name: "Letras Manuales", family: "'Amatic SC', cursive" },
-  { id: "lobster", name: "Lettering Bold", family: "'Lobster', cursive" },
-  { id: "caveat", name: "Escritura Natural", family: "'Caveat', cursive" },
-  { id: "kaushan-script", name: "Script Dinámico", family: "'Kaushan Script', cursive" },
+  // ... (resto de tus fuentes)
 ];
 const COLORS = [
   { name: "Negro", value: "#000000" },
   { name: "Blanco", value: "#FFFFFF" },
-  { name: "Primario", value: "#5B4FBE" },
-  { name: "Secundario", value: "#FF6B6B" },
-  { name: "Acento", value: "#FFD93D" },
-  { name: "Gris Oscuro", value: "#4A4A4A" },
-  { name: "Rojo", value: "#E53935" },
-  { name: "Verde", value: "#43A047" },
-  { name: "Azul", value: "#1E88E5" },
   { name: "Morado", value: "#8E24AA" },
+  // ... (resto de tus colores)
 ];
 const PLANTILLAS = [
     { id: "boda", categoria: "ocasiones", nombre: "Invitación de Boda", texto: "Juan & María\n12 de Junio 2023", estilo: "dancing-script", color: "#5B4FBE", fontSize: 70, letterSpacing: 1, lineHeight: 1.8, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.3)", shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
@@ -57,39 +45,25 @@ export default function EditorClient() {
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  const initialText = "Tu texto aquí";
-  const initialFont = FONTS[0].id;
-  const initialFontSize = 60;
-  const initialColor = "#5B4FBE";
-  const initialAlignment = "center" as "left" | "center" | "right";
-  const initialLetterSpacing = 0;
-  const initialLineHeight = 1.5;
-  const initialRotation = 0;
-  const initialShadow = false;
-  const initialShadowColor = "#000000";
-  const initialShadowBlur = 5;
-  const initialShadowOffsetX = 2;
-  const initialShadowOffsetY = 2;
-  const initialOutline = false;
-  const initialOutlineColor = "#FFFFFF";
-  const initialOutlineWidth = 2;
+  const [text, setText] = useState("Tu texto aquí");
+  const [fontSize, setFontSize] = useState(60);
+  const [color, setColor] = useState("#5B4FBE");
+  const [alignment, setAlignment] = useState<"left" | "center" | "right">("center");
+  const [letterSpacing, setLetterSpacing] = useState(0);
+  const [lineHeight, setLineHeight] = useState(1.5);
+  const [rotation, setRotation] = useState(0);
+  const [font, setFont] = useState(FONTS[0].id);
 
-  const [text, setText] = useState(initialText);
-  const [fontSize, setFontSize] = useState(initialFontSize);
-  const [color, setColor] = useState(initialColor);
-  const [alignment, setAlignment] = useState<"left" | "center" | "right">(initialAlignment);
-  const [letterSpacing, setLetterSpacing] = useState(initialLetterSpacing);
-  const [lineHeight, setLineHeight] = useState(initialLineHeight);
-  const [rotation, setRotation] = useState(initialRotation);
-  const [font, setFont] = useState(initialFont);
-  const [shadow, setShadow] = useState(initialShadow);
-  const [shadowColor, setShadowColor] = useState(initialShadowColor);
-  const [shadowBlur, setShadowBlur] = useState(initialShadowBlur);
-  const [shadowOffsetX, setShadowOffsetX] = useState(initialShadowOffsetX);
-  const [shadowOffsetY, setShadowOffsetY] = useState(initialShadowOffsetY);
-  const [outline, setOutline] = useState(initialOutline);
-  const [outlineColor, setOutlineColor] = useState(initialOutlineColor);
-  const [outlineWidth, setOutlineWidth] = useState(initialOutlineWidth);
+  const [shadow, setShadow] = useState(false);
+  const [shadowColor, setShadowColor] = useState("#000000");
+  const [shadowBlur, setShadowBlur] = useState(5);
+  const [shadowOffsetX, setShadowOffsetX] = useState(2);
+  const [shadowOffsetY, setShadowOffsetY] = useState(2);
+
+  const [outline, setOutline] = useState(false);
+  const [outlineColor, setOutlineColor] = useState("#FFFFFF");
+  const [outlineWidth, setOutlineWidth] = useState(2);
+
   const [isExporting, setIsExporting] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -112,23 +86,19 @@ export default function EditorClient() {
         setLetterSpacing(plantilla.letterSpacing); setLineHeight(plantilla.lineHeight);
         setRotation(plantilla.rotation); setShadow(plantilla.shadow);
         if (plantilla.shadow) {
-          setShadowColor(plantilla.shadowColor || initialShadowColor); setShadowBlur(plantilla.shadowBlur || initialShadowBlur);
-          setShadowOffsetX(plantilla.shadowOffsetX || initialShadowOffsetX); setShadowOffsetY(plantilla.shadowOffsetY || initialShadowOffsetY);
-        } else {
-            setShadowColor(initialShadowColor); setShadowBlur(initialShadowBlur);
-            setShadowOffsetX(initialShadowOffsetX); setShadowOffsetY(initialShadowOffsetY);
+          setShadowColor(plantilla.shadowColor || "#000000"); setShadowBlur(plantilla.shadowBlur || 0); // Fallbacks
+          setShadowOffsetX(plantilla.shadowOffsetX || 0); setShadowOffsetY(plantilla.shadowOffsetY || 0);
         }
         setOutline(plantilla.outline);
         if (plantilla.outline) {
-          setOutlineColor(plantilla.outlineColor || initialOutlineColor); setOutlineWidth(plantilla.outlineWidth || initialOutlineWidth);
-        } else {
-            setOutlineColor(initialOutlineColor); setOutlineWidth(initialOutlineWidth);
+          setOutlineColor(plantilla.outlineColor || "#FFFFFF"); setOutlineWidth(plantilla.outlineWidth || 0); // Fallbacks
         }
       }
     }
   }, [plantillaId]);
 
   const currentFont = FONTS.find((f) => f.id === font) || FONTS[0];
+
   const textStyle: React.CSSProperties = {
     fontFamily: currentFont.family, fontSize: `${fontSize}px`, color: color,
     textAlign: alignment, letterSpacing: `${letterSpacing}px`, lineHeight: lineHeight,
@@ -154,27 +124,7 @@ export default function EditorClient() {
     } finally { setIsExporting(false); }
   };
 
-  const handleResetAll = () => {
-    setText(initialText);
-    setFont(initialFont);
-    setFontSize(initialFontSize);
-    setColor(initialColor);
-    setAlignment(initialAlignment);
-    setLetterSpacing(initialLetterSpacing);
-    setLineHeight(initialLineHeight);
-    setRotation(initialRotation);
-    setShadow(initialShadow);
-    setShadowColor(initialShadowColor);
-    setShadowBlur(initialShadowBlur);
-    setShadowOffsetX(initialShadowOffsetX);
-    setShadowOffsetY(initialShadowOffsetY);
-    setOutline(initialOutline);
-    setOutlineColor(initialOutlineColor);
-    setOutlineWidth(initialOutlineWidth);
-    toast({ title: "Editor Reiniciado", description: "Todos los ajustes han vuelto a sus valores por defecto." });
-  };
-
-  // const handleRandomize = () => { ... LÓGICA DE ALEATORIO ELIMINADA ... };
+  // console.log("Stable version with Export, before Reset/Random buttons.");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -192,9 +142,9 @@ export default function EditorClient() {
           <div> {/* Panel de Controles */}
             <Tabs defaultValue="texto" className="w-full">
               <TabsList> <TabsTrigger value="texto">Texto</TabsTrigger> <TabsTrigger value="estilo">Estilo</TabsTrigger> <TabsTrigger value="efectos">Efectos</TabsTrigger> </TabsList>
-              <TabsContent value="texto" className="space-y-4 mt-4"> {/* ... (Contenido de Texto sin cambios) ... */} <div className="space-y-2"> <Label htmlFor="text-input">Texto para Lettering</Label> <Textarea id="text-input" value={text} onChange={(e) => setText(e.target.value)} placeholder="Escribe tu texto aquí..." rows={3}/> </div> <div className="space-y-2"> <Label htmlFor="font-select">Estilo de Letra</Label> <Select value={font} onValueChange={setFont}> <SelectTrigger id="font-select"><SelectValue placeholder="Selecciona una fuente" /></SelectTrigger> <SelectContent>{FONTS.map((f) => (<SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>))}</SelectContent> </Select> </div> <TouchSlider label="Tamaño" min={10} max={200} step={1} value={fontSize} onChange={setFontSize} unit="px"/> <div className="space-y-2"> <Label>Alineación</Label> <div className="flex gap-2"> <Button variant={alignment === "left" ? "default" : "outline"} size="icon" onClick={() => setAlignment("left")}><AlignLeft className="h-4 w-4" /></Button> <Button variant={alignment === "center" ? "default" : "outline"} size="icon" onClick={() => setAlignment("center")}><AlignCenter className="h-4 w-4" /></Button> <Button variant={alignment === "right" ? "default" : "outline"} size="icon" onClick={() => setAlignment("right")}><AlignRight className="h-4 w-4" /></Button> </div> </div> </TabsContent>
-              <TabsContent value="estilo" className="space-y-4 mt-4"> {/* ... (Contenido de Estilo sin cambios) ... */} <div className="space-y-2"> <Label htmlFor="color-select-estilo">Color del Texto</Label> <TouchColorPicker value={color} onChange={setColor} presetColors={COLORS.map((c) => c.value)}/> </div> <TouchSlider label="Espaciado entre Letras" min={-5} max={20} step={0.5} value={letterSpacing} onChange={setLetterSpacing} unit="px"/> <TouchSlider label="Altura de Línea" min={0.8} max={3} step={0.1} value={lineHeight} onChange={setLineHeight}/> <TouchSlider label="Rotación" min={-180} max={180} step={1} value={rotation} onChange={setRotation} unit="°"/> <Button variant="outline" size="sm" onClick={() => setRotation(0)} className="w-full mt-1"><RotateCcw className="h-4 w-4 mr-2" />Restablecer Rotación</Button> </TabsContent>
-              <TabsContent value="efectos" className="space-y-4 mt-4"> {/* ... (Contenido de Efectos sin cambios) ... */} <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="shadow-switch">Sombra</Label> <Switch id="shadow-switch" checked={shadow} onCheckedChange={setShadow} /> </div> {shadow && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-color">Color</Label> <TouchColorPicker id="shadow-color" value={shadowColor} onChange={setShadowColor} presetColors={COLORS.map(c=>c.value)} className="mt-1" /> </div> <div> <Label htmlFor="shadow-blur">Desenfoque</Label> <TouchSlider id="shadow-blur" label="" min={0} max={20} step={1} value={shadowBlur} onChange={setShadowBlur} className="mt-1"/> </div> </div> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-offset-x">Desplazamiento X</Label> <TouchSlider id="shadow-offset-x" label="" min={-20} max={20} step={1} value={shadowOffsetX} onChange={setShadowOffsetX}/> </div> <div> <Label htmlFor="shadow-offset-y">Desplazamiento Y</Label> <TouchSlider id="shadow-offset-y" label="" min={-20} max={20} step={1} value={shadowOffsetY} onChange={setShadowOffsetY}/> </div> </div> </div> )} </div> <div className="space-y-2 pt-4 mt-4 border-t"> <div className="flex items-center justify-between"> <Label htmlFor="outline-switch">Contorno</Label> <Switch id="outline-switch" checked={outline} onCheckedChange={setOutline} /> </div> {outline && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="outline-color">Color</Label> <TouchColorPicker id="outline-color" value={outlineColor} onChange={setOutlineColor} presetColors={COLORS.map(c=>c.value)} className="mt-1" /> </div> <div> <Label htmlFor="outline-width">Grosor</Label> <TouchSlider id="outline-width" label="" min={0.5} max={10} step={0.5} value={outlineWidth} onChange={setOutlineWidth} unit="px" className="mt-1"/> </div> </div> </div> )} </div> </TabsContent>
+              <TabsContent value="texto" className="space-y-4 mt-4"> <div className="space-y-2"> <Label htmlFor="text-input">Texto para Lettering</Label> <Textarea id="text-input" value={text} onChange={(e) => setText(e.target.value)} placeholder="Escribe tu texto aquí..." rows={3}/> </div> <div className="space-y-2"> <Label htmlFor="font-select">Estilo de Letra</Label> <Select value={font} onValueChange={setFont}> <SelectTrigger id="font-select"><SelectValue placeholder="Selecciona una fuente" /></SelectTrigger> <SelectContent>{FONTS.map((f) => (<SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>))}</SelectContent> </Select> </div> <TouchSlider label="Tamaño" min={10} max={200} step={1} value={fontSize} onChange={setFontSize} unit="px"/> <div className="space-y-2"> <Label>Alineación</Label> <div className="flex gap-2"> <Button variant={alignment === "left" ? "default" : "outline"} size="icon" onClick={() => setAlignment("left")}><AlignLeft className="h-4 w-4" /></Button> <Button variant={alignment === "center" ? "default" : "outline"} size="icon" onClick={() => setAlignment("center")}><AlignCenter className="h-4 w-4" /></Button> <Button variant={alignment === "right" ? "default" : "outline"} size="icon" onClick={() => setAlignment("right")}><AlignRight className="h-4 w-4" /></Button> </div> </div> </TabsContent>
+              <TabsContent value="estilo" className="space-y-4 mt-4"> <div className="space-y-2"> <Label htmlFor="color-select-estilo">Color del Texto</Label> <TouchColorPicker value={color} onChange={setColor} presetColors={COLORS.map((c) => c.value)}/> </div> <TouchSlider label="Espaciado entre Letras" min={-5} max={20} step={0.5} value={letterSpacing} onChange={setLetterSpacing} unit="px"/> <TouchSlider label="Altura de Línea" min={0.8} max={3} step={0.1} value={lineHeight} onChange={setLineHeight}/> <TouchSlider label="Rotación" min={-180} max={180} step={1} value={rotation} onChange={setRotation} unit="°"/> <Button variant="outline" size="sm" onClick={() => setRotation(0)} className="w-full mt-1"><RotateCcw className="h-4 w-4 mr-2" />Restablecer Rotación</Button> </TabsContent>
+              <TabsContent value="efectos" className="space-y-4 mt-4"> <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="shadow-switch">Sombra</Label> <Switch id="shadow-switch" checked={shadow} onCheckedChange={setShadow} /> </div> {shadow && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-color">Color</Label> <TouchColorPicker id="shadow-color" value={shadowColor} onChange={setShadowColor} presetColors={COLORS.map(c=>c.value)} className="mt-1" /> </div> <div> <Label htmlFor="shadow-blur">Desenfoque</Label> <TouchSlider id="shadow-blur" label="" min={0} max={20} step={1} value={shadowBlur} onChange={setShadowBlur} className="mt-1"/> </div> </div> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-offset-x">Desplazamiento X</Label> <TouchSlider id="shadow-offset-x" label="" min={-20} max={20} step={1} value={shadowOffsetX} onChange={setShadowOffsetX}/> </div> <div> <Label htmlFor="shadow-offset-y">Desplazamiento Y</Label> <TouchSlider id="shadow-offset-y" label="" min={-20} max={20} step={1} value={shadowOffsetY} onChange={setShadowOffsetY}/> </div> </div> </div> )} </div> <div className="space-y-2 pt-4 mt-4 border-t"> <div className="flex items-center justify-between"> <Label htmlFor="outline-switch">Contorno</Label> <Switch id="outline-switch" checked={outline} onCheckedChange={setOutline} /> </div> {outline && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="outline-color">Color</Label> <TouchColorPicker id="outline-color" value={outlineColor} onChange={setOutlineColor} presetColors={COLORS.map(c=>c.value)} className="mt-1" /> </div> <div> <Label htmlFor="outline-width">Grosor</Label> <TouchSlider id="outline-width" label="" min={0.5} max={10} step={0.5} value={outlineWidth} onChange={setOutlineWidth} unit="px" className="mt-1"/> </div> </div> </div> )} </div> </TabsContent>
             </Tabs>
           </div>
 
@@ -202,28 +152,21 @@ export default function EditorClient() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Vista Previa (Solo Reiniciar)</h3> {/* Título actualizado */}
-                  <Popover> {/* ... (Popover de Exportar sin cambios) ... */}
+                  <h3 className="text-lg font-semibold">Vista Previa (Exportar Activo)</h3>
+                  <Popover>
                     <PopoverTrigger asChild> <Button variant="outline" size="sm" disabled={isExporting}> {isExporting ? ( <Loader2 className="h-4 w-4 animate-spin mr-2" /> ) : ( <Download className="h-4 w-4 mr-2" /> )} Exportar </Button> </PopoverTrigger>
                     <PopoverContent className="w-56" align="end"> <div className="grid gap-2"> <Button variant="ghost" size="sm" onClick={() => exportAsImage("png")} className="justify-start" disabled={isExporting}>PNG (Transparente)</Button> <Button variant="ghost" size="sm" onClick={() => exportAsImage("jpg")} className="justify-start" disabled={isExporting}>JPG (Fondo Blanco)</Button> </div> </PopoverContent>
                   </Popover>
                 </div>
                 
-                <div ref={previewRef} style={{ border: '1px solid goldenrod', padding: '10px', background: '#fff8e1' }} className="lettering-preview-capture-area bg-white rounded-md overflow-hidden"> {/* Color de borde actualizado */}
+                <div ref={previewRef} style={{ border: '1px solid lightcoral', padding: '10px', background: '#fff0f0' }} className="lettering-preview-capture-area bg-white rounded-md overflow-hidden">
                   <div style={textStyle}> {text || "Escribe algo..."} </div>
                 </div>
-
-                {/* BOTÓN DE REINICIAR - Botón de Aleatorio ELIMINADO */}
-                <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-1"> {/* Ajustado a 1 columna */}
-                  <Button variant="outline" size="sm" onClick={handleResetAll}>
-                    Reiniciar Todo
-                  </Button>
-                  {/* El botón de Aleatorio ha sido eliminado */}
-                </div>
+                {/* NO HAY BOTONES DE REINICIAR/ALEATORIO EN ESTA VERSIÓN */}
               </CardContent>
             </Card>
 
-            {!isMobile && ( /* ... (Plantillas y Consejos sin cambios) ... */
+            {!isMobile && (
               <div className="mt-6 space-y-6"> <Card> <CardContent className="pt-6"> <h3 className="text-xl font-semibold mb-3">Plantillas Populares</h3> <ul className="space-y-2"> {PLANTILLAS.slice(0, 3).map(p => (<li key={p.id}><Link href={`/editor?plantilla=${p.id}`} className="text-blue-600 hover:underline">{p.nombre}</Link></li>))} </ul> </CardContent> </Card> <Card> <CardContent className="pt-6"> <h3 className="text-xl font-semibold mb-3">Consejos Rápidos</h3> <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground"> <li>Usa fuentes legibles para mensajes importantes.</li> <li>Contrasta bien el color del texto con el fondo.</li> </ul> </CardContent> </Card> </div>
             )}
           </div>
