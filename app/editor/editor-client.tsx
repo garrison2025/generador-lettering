@@ -4,20 +4,25 @@ import { SiteFooter } from "@/components/site-footer"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 
+// Resto del código del editor...
+
 export default function EditorClient() {
+  // Mantener el código existente...
   const isMobile = useIsMobile()
-  console.log("useIsMobile hook was called, isMobile:", isMobile);
 
   return (
     <div className="flex flex-col min-h-screen">
       <SiteHeader />
+
       <main className="flex-1 container mx-auto px-4 py-8">
+        {/* Breadcrumbs para SEO */}
         <Breadcrumbs
           items={[
             { label: "Inicio", href: "/" },
             { label: "Editor de Lettering", href: "/editor" },
           ]}
         />
+
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-3">Editor de Lettering Profesional</h1>
           <p className="text-lg text-muted-foreground max-w-3xl">
@@ -27,11 +32,9 @@ export default function EditorClient() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
-          <div style={{border: '1px solid red', padding: '10px', minHeight: '50px'}}>
-            Grid area is here. Value of isMobile: {isMobile === undefined ? 'undefined' : isMobile ? 'true' : 'false'}
-          </div>
+          {/* Resto del código del editor... */}
 
-          {/* 1. 取消 SEO 内容块的注释 */}
+          {/* Añadir contenido rico en palabras clave */}
           {!isMobile && (
             <div className="mt-8">
               <h2 className="text-2xl font-semibold mb-4">Crea Lettering Personalizado</h2>
@@ -64,8 +67,8 @@ export default function EditorClient() {
             </div>
           )}
         </div>
-        <p style={{color: 'purple', marginTop: '10px'}}>Test C: SEO block is now UNCOMMENTED. Will it break?</p>
       </main>
+
       <SiteFooter />
     </div>
   )
