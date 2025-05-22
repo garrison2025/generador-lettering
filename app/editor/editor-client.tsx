@@ -11,8 +11,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-// Popover, PopoverContent, PopoverTrigger 仍然导入，以防其他地方用到，但此处的特定实例会被移除
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover" 
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useSearchParams } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import html2canvas from "html2canvas"
@@ -36,7 +35,7 @@ const TabsComponent = dynamic(() => import("../components/editor/tabs-component"
   ssr: false,
 })
 
-// 定义字体和模板数据（来自你提供的版本）
+// 定义字体和模板数据（保持不变）
 const FONTS = [
   { id: "dancing-script", name: "Caligrafía Elegante", family: "'Dancing Script', cursive" },
   { id: "pacifico", name: "Script Moderno", family: "'Pacifico', cursive" },
@@ -291,21 +290,21 @@ export default function EditorClient() {
   const [text, setText] = useState("Tu texto aquí");
   const [fontSize, setFontSize] = useState(60);
   const [color, setColor] = useState("#5B4FBE");
-  const [alignment, setAlignment] = useState<"left" | "center" | "right">("center"); // Typed alignment
+  const [alignment, setAlignment] = useState("center"); // Kept original type, will be cast in textStyle
   const [letterSpacing, setLetterSpacing] = useState(0);
   const [lineHeight, setLineHeight] = useState(1.5);
   const [rotation, setRotation] = useState(0);
   const [font, setFont] = useState(FONTS[0].id);
 
   const [shadow, setShadow] = useState(false);
-  const [shadowColor, setShadowColorState] = useState("#000000"); // Renamed to avoid conflict
-  const [shadowBlur, setShadowBlurState] = useState(5);       // Renamed to avoid conflict
-  const [shadowOffsetX, setShadowOffsetXState] = useState(2);   // Renamed to avoid conflict
-  const [shadowOffsetY, setShadowOffsetYState] = useState(2);   // Renamed to avoid conflict
+  const [shadowColor, setShadowColor] = useState("#000000"); // Original state name
+  const [shadowBlur, setShadowBlur] = useState(5);         // Original state name
+  const [shadowOffsetX, setShadowOffsetX] = useState(2);     // Original state name
+  const [shadowOffsetY, setShadowOffsetY] = useState(2);     // Original state name
 
   const [outline, setOutline] = useState(false);
-  const [outlineColor, setOutlineColorState] = useState("#FFFFFF"); // Renamed to avoid conflict
-  const [outlineWidth, setOutlineWidthState] = useState(2);     // Renamed to avoid conflict
+  const [outlineColor, setOutlineColor] = useState("#FFFFFF"); // Original state name
+  const [outlineWidth, setOutlineWidth] = useState(2);       // Original state name
 
   const [isExporting, setIsExporting] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -328,21 +327,21 @@ export default function EditorClient() {
         setFont(plantilla.estilo);
         setFontSize(plantilla.fontSize);
         setColor(plantilla.color);
-        setAlignment(plantilla.alignment as "left" | "center" | "right"); // Ensure type cast
+        setAlignment(plantilla.alignment); // Keep original
         setLetterSpacing(plantilla.letterSpacing);
         setLineHeight(plantilla.lineHeight);
         setRotation(plantilla.rotation);
         setShadow(plantilla.shadow);
         if (plantilla.shadow) {
-          setShadowColorState(plantilla.shadowColor || "#000000");
-          setShadowBlurState(plantilla.shadowBlur || 0);
-          setShadowOffsetXState(plantilla.shadowOffsetX || 0);
-          setShadowOffsetYState(plantilla.shadowOffsetY || 0);
+          setShadowColor(plantilla.shadowColor!); // Use original setter
+          setShadowBlur(plantilla.shadowBlur!);   // Use original setter
+          setShadowOffsetX(plantilla.shadowOffsetX!); // Use original setter
+          setShadowOffsetY(plantilla.shadowOffsetY!); // Use original setter
         }
         setOutline(plantilla.outline);
         if (plantilla.outline) {
-          setOutlineColorState(plantilla.outlineColor || "#FFFFFF");
-          setOutlineWidthState(plantilla.outlineWidth || 0);
+          setOutlineColor(plantilla.outlineColor!); // Use original setter
+          setOutlineWidth(plantilla.outlineWidth!);   // Use original setter
         }
       }
     }
@@ -353,22 +352,19 @@ export default function EditorClient() {
     fontFamily: currentFont.family,
     fontSize: `${fontSize}px`,
     color: color,
-    textAlign: alignment,
+    textAlign: alignment as "left" | "center" | "right", // Cast here for CSSProperties
     letterSpacing: `${letterSpacing}px`,
     lineHeight: lineHeight,
     transform: `rotate(${rotation}deg)`,
     textShadow: shadow ? `${shadowOffsetX}px ${shadowOffsetY}px ${shadowBlur}px ${shadowColor}` : "none",
-    WebkitTextStroke: outline ? `${outlineWidth}px ${outlineColor}` : "none", // Use state variables for outline
+    WebkitTextStroke: outline ? `${outlineWidth}px ${outlineColor}` : "none",
     padding: "20px",
     maxWidth: "100%",
-    wordWrap: "break-word",
+    wordWrap: "break-word" as const, // Keep original 'as const'
   };
 
   const exportAsImage = async (type: "png" | "jpg") => {
-    if (!previewRef.current) {
-        toast({ title: "Error", description: "Preview element not found.", variant: "destructive" });
-        return;
-    }
+    if (!previewRef.current) return; // Keep original return
     try {
       setIsExporting(true);
       const options = {
@@ -383,9 +379,9 @@ export default function EditorClient() {
       const link = document.createElement("a");
       link.download = `lettering-${new Date().getTime()}.${type}`;
       link.href = dataUrl;
-      document.body.appendChild(link);
+      // document.body.appendChild(link); // Not strictly necessary for .click() in modern browsers
       link.click();
-      document.body.removeChild(link);
+      // document.body.removeChild(link); // Clean up if appended
       toast({
         title: "¡Imagen exportada con éxito!",
         description: `Tu diseño de lettering ha sido guardado como ${type.toUpperCase()}.`,
@@ -450,8 +446,8 @@ export default function EditorClient() {
                   <Button variant="outline" size="sm" onClick={() => setRotation(0)} className="w-full mt-1"><RotateCcw className="h-4 w-4 mr-2" />Restablecer Rotación</Button>
                 </TabsContent>
                 <TabsContent value="efectos" className="space-y-4">
-                  <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="shadow-switch">Sombra</Label> <Switch id="shadow-switch" checked={shadow} onCheckedChange={setShadow} /> </div> {shadow && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-color">Color</Label> <TouchColorPicker value={shadowColor} onChange={setShadowColorState} className="mt-1" /> </div> <div> <TouchSlider label="Desenfoque" min={0} max={20} step={1} value={shadowBlur} onChange={setShadowBlurState} className="mt-1"/> </div> </div> <div className="grid grid-cols-2 gap-2"> <TouchSlider label="Desplazamiento X" min={-20} max={20} step={1} value={shadowOffsetX} onChange={setShadowOffsetXState}/> <TouchSlider label="Desplazamiento Y" min={-20} max={20} step={1} value={shadowOffsetY} onChange={setShadowOffsetYState}/> </div> </div> )} </div>
-                  <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="outline-switch">Contorno</Label> <Switch id="outline-switch" checked={outline} onCheckedChange={setOutline} /> </div> {outline && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="outline-color">Color</Label> <TouchColorPicker value={outlineColor} onChange={setOutlineColorState} className="mt-1" /> </div> <TouchSlider label="Grosor" min={0.5} max={10} step={0.5} value={outlineWidth} onChange={setOutlineWidthState} className="mt-1"/> </div> </div> )} </div>
+                  <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="shadow-switch">Sombra</Label> <Switch id="shadow-switch" checked={shadow} onCheckedChange={setShadow} /> </div> {shadow && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-color">Color</Label> <TouchColorPicker value={shadowColor} onChange={setShadowColor} className="mt-1" /> </div> <div> <TouchSlider label="Desenfoque" min={0} max={20} step={1} value={shadowBlur} onChange={setShadowBlur} className="mt-1"/> </div> </div> <div className="grid grid-cols-2 gap-2"> <TouchSlider label="Desplazamiento X" min={-20} max={20} step={1} value={shadowOffsetX} onChange={setShadowOffsetX}/> <TouchSlider label="Desplazamiento Y" min={-20} max={20} step={1} value={shadowOffsetY} onChange={setShadowOffsetY}/> </div> </div> )} </div>
+                  <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="outline-switch">Contorno</Label> <Switch id="outline-switch" checked={outline} onCheckedChange={setOutline} /> </div> {outline && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="outline-color">Color</Label> <TouchColorPicker value={outlineColor} onChange={setOutlineColor} className="mt-1" /> </div> <TouchSlider label="Grosor" min={0.5} max={10} step={0.5} value={outlineWidth} onChange={setOutlineWidth} className="mt-1"/> </div> </div> )} </div>
                 </TabsContent>
               </Tabs>
             </MobileEditorControls>
@@ -469,12 +465,12 @@ export default function EditorClient() {
                           className="h-auto py-2 justify-start"
                           onClick={() => {
                             setText(plantilla.texto); setFont(plantilla.estilo); setFontSize(plantilla.fontSize);
-                            setColor(plantilla.color); setAlignment(plantilla.alignment as "left" | "center" | "right");
+                            setColor(plantilla.color); setAlignment(plantilla.alignment); // Use original
                             setLetterSpacing(plantilla.letterSpacing); setLineHeight(plantilla.lineHeight);
                             setRotation(plantilla.rotation); setShadow(plantilla.shadow);
-                            if (plantilla.shadow) { setShadowColorState(plantilla.shadowColor!); setShadowBlurState(plantilla.shadowBlur!); setShadowOffsetXState(plantilla.shadowOffsetX!); setShadowOffsetYState(plantilla.shadowOffsetY!); }
+                            if (plantilla.shadow) { setShadowColor(plantilla.shadowColor!); setShadowBlur(plantilla.shadowBlur!); setShadowOffsetX(plantilla.shadowOffsetX!); setShadowOffsetY(plantilla.shadowOffsetY!); }
                             setOutline(plantilla.outline);
-                            if (plantilla.outline) { setOutlineColorState(plantilla.outlineColor!); setOutlineWidthState(plantilla.outlineWidth!); }
+                            if (plantilla.outline) { setOutlineColor(plantilla.outlineColor!); setOutlineWidth(plantilla.outlineWidth!); }
                           }}
                         >
                           {plantilla.nombre}
