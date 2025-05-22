@@ -85,7 +85,7 @@ export default function EditorClient() {
   const [alignment, setAlignment] = useState<"left" | "center" | "right">("center");
   const [letterSpacing, setLetterSpacing] = useState(0);
   const [lineHeight, setLineHeight] = useState(1.5);
-  const [rotation, setRotation] = useState(0); // state for rotation (remains, but UI commented out)
+  const [rotation, setRotation] = useState(0);
   const [font, setFont] = useState(FONTS[0].id);
 
   const [shadow, setShadow] = useState(false);
@@ -103,7 +103,6 @@ export default function EditorClient() {
 
   useEffect(() => {
     // console.log("Font loading useEffect - DOM manipulation COMMENTED OUT.");
-    // Placeholder for font loading logic - currently commented out
   }, []);
 
   useEffect(() => {
@@ -143,7 +142,7 @@ export default function EditorClient() {
     textAlign: alignment,
     letterSpacing: `${letterSpacing}px`,
     lineHeight: lineHeight,
-    transform: `rotate(${rotation}deg)`, // Uses rotation state, will default to 0 or plantilla
+    transform: `rotate(${rotation}deg)`,
     textShadow: shadow ? `${shadowOffsetX}px ${shadowOffsetY}px ${shadowBlur}px ${shadowColor}` : "none",
     WebkitTextStroke: outline ? `${outlineWidth}px ${outlineColor}` : "none",
     padding: "20px",
@@ -151,7 +150,7 @@ export default function EditorClient() {
     wordWrap: "break-word",
   };
 
-  // console.log("STAGE 2d (Full Estilo) - Rotation Slider and Reset Button COMMENTED OUT for testing.");
+  // console.log("STAGE 2d - Step A: Rotation Slider UNCOMMENTED, Reset Button REMAINS COMMENTED.");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -179,6 +178,7 @@ export default function EditorClient() {
                 <TabsTrigger value="efectos">Efectos</TabsTrigger>
               </TabsList>
               <TabsContent value="texto" className="space-y-4 mt-4">
+                {/* Contenido de la pestaña Texto (sin cambios) */}
                 <div className="space-y-2">
                   <Label htmlFor="text-input">Texto para Lettering</Label>
                   <Textarea
@@ -268,8 +268,7 @@ export default function EditorClient() {
                   onChange={setLineHeight}
                 />
 
-                {/* 1. “旋转”的 TouchSlider 已注释掉 */}
-                {/*
+                {/* 1. “旋转”的 TouchSlider 已取消注释 */}
                 <TouchSlider
                   label="Rotación"
                   min={-180}
@@ -279,9 +278,8 @@ export default function EditorClient() {
                   onChange={setRotation}
                   unit="°"
                 />
-                */}
 
-                {/* 2. “重置旋转”按钮 已注释掉 */}
+                {/* 2. “重置旋转”按钮 保持注释状态 */}
                 {/*
                 <Button variant="outline" size="sm" onClick={() => setRotation(0)} className="w-full mt-1">
                   <RotateCcw className="h-4 w-4 mr-2" />
@@ -292,13 +290,12 @@ export default function EditorClient() {
 
               <TabsContent value="efectos" className="space-y-4 mt-4">
                 <p>Contenido de Efectos (aún no implementado)</p>
-                {/* Aquí irían los controles para sombra y contorno */}
               </TabsContent>
             </Tabs>
           </div>
 
-          <div style={{border: '1px solid lightpink', padding: '10px', background: '#fff0f5'}}> {/* Cambiado el color para indicar que es una versión de prueba */}
-            <h3 className="text-lg font-semibold mb-2">Vista Previa (Rotación COMENTADA)</h3>
+          <div style={{border: '1px solid orange', padding: '10px', background: '#fff5e6'}}> {/* Cambiado el color para indicar Paso A */}
+            <h3 className="text-lg font-semibold mb-2">Vista Previa (Paso A: Rot. Slider Activo)</h3>
             <div style={textStyle}>
               {text || "Escribe algo..."}
             </div>
@@ -334,8 +331,8 @@ export default function EditorClient() {
           )}
         </div>
 
-        {isMobile && <div className="h-16"></div> /* Espacio extra para barra de navegación móvil */}
-        {/* <p style={{color: 'darkred', marginTop: '20px', textAlign: 'center', fontWeight: 'bold'}}>TEST: Rotation controls COMMENTED OUT in Estilo tab.</p> */}
+        {isMobile && <div className="h-16"></div>}
+        {/* <p style={{color: 'darkorange', marginTop: '20px', textAlign: 'center', fontWeight: 'bold'}}>TEST STEP A: Rotation Slider UNCOMMENTED. Reset Button REMAINS COMMENTED.</p> */}
       </main>
       <SiteFooter />
     </div>
