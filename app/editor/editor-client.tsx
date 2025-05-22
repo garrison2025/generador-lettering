@@ -1,132 +1,258 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
-// import dynamic from "next/dynamic"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs" // <--- 1. 恢复 Tabs导入
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select" // <--- 2. 恢复 Select导入
-import { AlignLeft, AlignCenter, AlignRight, RotateCcw, Loader2, Download } from "lucide-react"
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-// import { Switch } from "@/components/ui/switch" // 稍后
-import { Textarea } from "@/components/ui/textarea" // <--- 3. 恢复 Textarea导入
-// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover" // 稍后
+// import dynamic from "next/dynamic" // 暂时不用
+import { Button } from "@/components/ui/button" // 保留，原始代码有
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs" // Stage 2
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select" // Stage 2
+import { AlignLeft, AlignCenter, AlignRight, RotateCcw, Loader2, Download } from "lucide-react" // 保留
+import Link from "next/link" // 保留，SEO块或底部链接可能用到
+import { Card, CardContent } from "@/components/ui/card" // 保留，SEO块或底部提示卡片可能用到
+import { Label } from "@/components/ui/label" // 保留，因为文本输入会用到
+// import { Switch } from "@/components/ui/switch" // Stage 2
+// import { Textarea } from "@/components/ui/textarea" // Stage 2 (TextControls), 这里先用原生textarea
+// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover" // Stage 2 (Export)
 import { useSearchParams } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
-// import html2canvas from "html2canvas"
-// import { LoadingSpinner } from "@/components/ui/loading-spinner"
+// import html2canvas from "html2canvas" // Stage 3 (Export)
+// import { LoadingSpinner } from "@/components/ui/loading-spinner" // Stage 2 (Export or dynamic import)
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { useIsMobile } from "@/hooks/use-mobile"
-// import { MobileEditorControls } from "@/components/mobile-editor-controls" // 暂时不加
-// import { TouchColorPicker } from "@/components/ui/touch-color-picker" // 稍后
-// import { TouchSlider } from "@/components/ui/touch-slider" // 稍后
-// import { MobileLetteringPreview } from "@/components/mobile-lettering-preview" // 稍后
+// import { MobileEditorControls } from "@/components/mobile-editor-controls" // Stage 2
+// import { TouchColorPicker } from "@/components/ui/touch-color-picker" // Stage 2
+// import { TouchSlider } from "@/components/ui/touch-slider" // Stage 2
+// import { MobileLetteringPreview } from "@/components/mobile-lettering-preview" // Stage 2
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 
-// FONTS, COLORS, PLANTILLAS 常量定义保持不变 (确保它们都在这里)
-const FONTS = [ /* ... */ ];
-const COLORS = [ /* ... */ ];
-const PLANTILLAS = [ /* ... */ ]; // 确保这是完整的 PLANTILLAS 数组
+// 定义字体和模板数据（来自你提供的完整原始代码）
+const FONTS = [
+  { id: "dancing-script", name: "Caligrafía Elegante", family: "'Dancing Script', cursive" },
+  { id: "pacifico", name: "Script Moderno", family: "'Pacifico', cursive" },
+  { id: "satisfy", name: "Caligrafía Fluida", family: "'Satisfy', cursive" },
+  { id: "sacramento", name: "Lettering Fino", family: "'Sacramento', cursive" },
+  { id: "great-vibes", name: "Caligrafía Clásica", family: "'Great Vibes', cursive" },
+  { id: "amatic-sc", name: "Letras Manuales", family: "'Amatic SC', cursive" },
+  { id: "lobster", name: "Lettering Bold", family: "'Lobster', cursive" },
+  { id: "caveat", name: "Escritura Natural", family: "'Caveat', cursive" },
+  { id: "kaushan-script", name: "Script Dinámico", family: "'Kaushan Script', cursive" },
+  { id: "permanent-marker", name: "Marcador", family: "'Permanent Marker', cursive" },
+];
+
+const COLORS = [ // 来自你提供的完整原始代码
+  { name: "Negro", value: "#000000" },
+  { name: "Blanco", value: "#FFFFFF" },
+  { name: "Primario", value: "#5B4FBE" },
+  { name: "Secundario", value: "#FF6B6B" },
+  { name: "Acento", value: "#FFD93D" },
+  { name: "Gris Oscuro", value: "#4A4A4A" },
+  { name: "Rojo", value: "#E53935" },
+  { name: "Verde", value: "#43A047" },
+  { name: "Azul", value: "#1E88E5" },
+  { name: "Morado", value: "#8E24AA" },
+];
+
+const PLANTILLAS = [ // 来自你提供的完整原始代码
+  {
+    id: "boda", categoria: "ocasiones", nombre: "Invitación de Boda", texto: "Juan & María\n12 de Junio 2023", estilo: "dancing-script", color: "#5B4FBE", fontSize: 70, letterSpacing: 1, lineHeight: 1.8, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.3)", shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2, outline: false,
+  },
+  {
+    id: "cumpleanos", categoria: "ocasiones", nombre: "Feliz Cumpleaños", texto: "¡Feliz Cumpleaños!", estilo: "pacifico", color: "#FF6B6B", fontSize: 80, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.2)", shadowBlur: 5, shadowOffsetX: 1, shadowOffsetY: 1, outline: false,
+  },
+  {
+    id: "graduacion", categoria: "ocasiones", nombre: "Graduación", texto: "¡Felicidades\nGraduado 2023!", estilo: "great-vibes", color: "#4A4A4A", fontSize: 65, letterSpacing: 1, lineHeight: 1.6, alignment: "center", rotation: 0, shadow: false, outline: true, outlineColor: "#FFD93D", outlineWidth: 1,
+  },
+  {
+    id: "motivacion1", categoria: "frases", nombre: "Motivación Diaria", texto: "Nunca te rindas", estilo: "permanent-marker", color: "#E53935", fontSize: 75, letterSpacing: 1, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.4)", shadowBlur: 3, shadowOffsetX: 3, shadowOffsetY: 3, outline: false,
+  },
+  {
+    id: "motivacion2", categoria: "frases", nombre: "Éxito", texto: "El éxito es la suma de pequeños esfuerzos", estilo: "satisfy", color: "#1E88E5", fontSize: 60, letterSpacing: 0, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: false, outline: false,
+  },
+  {
+    id: "amor", categoria: "frases", nombre: "Amor", texto: "Ama y sé feliz", estilo: "sacramento", color: "#FF6B6B", fontSize: 85, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.2)", shadowBlur: 4, shadowOffsetX: 1, shadowOffsetY: 1, outline: false,
+  },
+  {
+    id: "navidad", categoria: "festividades", nombre: "Navidad", texto: "¡Feliz Navidad\ny Próspero Año Nuevo!", estilo: "lobster", color: "#43A047", fontSize: 65, letterSpacing: 1, lineHeight: 1.6, alignment: "center", rotation: 0, shadow: true, shadowColor: "#FF6B6B", shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2, outline: false,
+  },
+  {
+    id: "annonuevo", categoria: "festividades", nombre: "Año Nuevo", texto: "¡Feliz 2023!", estilo: "kaushan-script", color: "#FFD93D", fontSize: 90, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "#4A4A4A", shadowBlur: 6, shadowOffsetX: 2, shadowOffsetY: 2, outline: false,
+  },
+  {
+    id: "halloween", categoria: "festividades", nombre: "Halloween", texto: "Noche de Terror", estilo: "amatic-sc", color: "#8E24AA", fontSize: 85, letterSpacing: 3, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "#000000", shadowBlur: 8, shadowOffsetX: 4, shadowOffsetY: 4, outline: false,
+  },
+  {
+    id: "logo", categoria: "negocios", nombre: "Logo Empresa", texto: "Mi Empresa", estilo: "caveat", color: "#5B4FBE", fontSize: 75, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: false, outline: true, outlineColor: "#FFFFFF", outlineWidth: 2,
+  },
+  {
+    id: "promocion", categoria: "negocios", nombre: "Promoción", texto: "¡OFERTA\nESPECIAL!", estilo: "permanent-marker", color: "#E53935", fontSize: 80, letterSpacing: 1, lineHeight: 1.4, alignment: "center", rotation: -5, shadow: true, shadowColor: "#000000", shadowBlur: 2, shadowOffsetX: 2, shadowOffsetY: 2, outline: true, outlineColor: "#FFD93D", outlineWidth: 3,
+  },
+  {
+    id: "menu", categoria: "negocios", nombre: "Menú Restaurante", texto: "Nuestro Menú", estilo: "great-vibes", color: "#4A4A4A", fontSize: 70, letterSpacing: 1, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: false, outline: false,
+  },
+];
 
 export default function EditorClient() {
-  // 所有 useState, useRef, useEffect, searchParams, toast, isMobile, currentFont, textStyle 保持不变
+  const searchParams = useSearchParams()
+  const plantillaId = searchParams.get("plantilla")
+  const { toast } = useToast() // toast 函数本身先不调用
+  const isMobile = useIsMobile()
 
-  const searchParams = useSearchParams(); /* ... */ const plantillaId = searchParams.get("plantilla");
-  const { toast } = useToast(); const isMobile = useIsMobile();
-  const [text, setText] = useState("Tu texto aquí"); const [fontSize, setFontSize] = useState(60);
-  const [color, setColor] = useState("#5B4FBE"); const [alignment, setAlignment] = useState("center");
-  const [letterSpacing, setLetterSpacing] = useState(0); const [lineHeight, setLineHeight] = useState(1.5);
-  const [rotation, setRotation] = useState(0); const [font, setFont] = useState(FONTS[0].id);
-  const [shadow, setShadow] = useState(false); const [shadowColor, setShadowColor] = useState("#000000");
-  const [shadowBlur, setShadowBlur] = useState(5); const [shadowOffsetX, setShadowOffsetX] = useState(2);
-  const [shadowOffsetY, setShadowOffsetY] = useState(2); const [outline, setOutline] = useState(false);
-  const [outlineColor, setOutlineColor] = useState("#FFFFFF"); const [outlineWidth, setOutlineWidth] = useState(2);
-  const [isExporting, setIsExporting] = useState(false);
-  const previewRef = useRef<HTMLDivElement>(null);
-  useEffect(() => { /* Font loading (DOM commented) */ }, []);
-  useEffect(() => { /* Plantilla loading */ }, [plantillaId]);
+  // 状态 (来自你提供的完整原始代码)
+  const [text, setText] = useState("Tu texto aquí")
+  const [fontSize, setFontSize] = useState(60)
+  const [color, setColor] = useState("#5B4FBE")
+  const [alignment, setAlignment] = useState("center")
+  const [letterSpacing, setLetterSpacing] = useState(0)
+  const [lineHeight, setLineHeight] = useState(1.5)
+  const [rotation, setRotation] = useState(0)
+  const [font, setFont] = useState(FONTS[0].id)
+  const [shadow, setShadow] = useState(false)
+  const [shadowColor, setShadowColor] = useState("#000000")
+  const [shadowBlur, setShadowBlur] = useState(5)
+  const [shadowOffsetX, setShadowOffsetX] = useState(2)
+  const [shadowOffsetY, setShadowOffsetY] = useState(2)
+  const [outline, setOutline] = useState(false)
+  const [outlineColor, setOutlineColor] = useState("#FFFFFF")
+  const [outlineWidth, setOutlineWidth] = useState(2)
+  const [isExporting, setIsExporting] = useState(false) // 暂时不使用
+
+  const previewRef = useRef<HTMLDivElement>(null) // 暂时不使用
+
+  // 加载字体 (DOM 操作暂时注释掉，只保留 console.log)
+  useEffect(() => {
+    console.log("STAGE 1: Font loading useEffect - DOM manipulation IS COMMENTED OUT.");
+    // const link = document.createElement("link")
+    // link.href =
+    //   "https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pacifico&family=Satisfy&family=Sacramento&family=Great+Vibes&family=Amatic+SC:wght@400;700&family=Lobster&family=Caveat:wght@400;700&family=Kaushan+Script&family=Permanent+Marker&display=swap"
+    // link.rel = "stylesheet"
+    // document.head.appendChild(link)
+    // return () => {
+    //   if (link.parentNode) {
+    //     link.parentNode.removeChild(link)
+    //   }
+    // }
+  }, [])
+
+  // 从URL加载模板 (这个 useEffect 只设置 state，应该是安全的)
+  useEffect(() => {
+    console.log("STAGE 1: Plantilla loading useEffect. Plantilla ID from URL:", plantillaId);
+    if (plantillaId) {
+      const plantilla = PLANTILLAS.find((p) => p.id === plantillaId);
+      if (plantilla) {
+        console.log("STAGE 1: Applying plantilla:", plantilla.nombre);
+        setText(plantilla.texto); setFont(plantilla.estilo); setFontSize(plantilla.fontSize); setColor(plantilla.color);
+        setAlignment(plantilla.alignment); setLetterSpacing(plantilla.letterSpacing); setLineHeight(plantilla.lineHeight);
+        setRotation(plantilla.rotation); setShadow(plantilla.shadow);
+        if (plantilla.shadow) {
+          setShadowColor(plantilla.shadowColor || "#000000"); setShadowBlur(plantilla.shadowBlur || 0);
+          setShadowOffsetX(plantilla.shadowOffsetX || 0); setShadowOffsetY(plantilla.shadowOffsetY || 0);
+        }
+        setOutline(plantilla.outline);
+        if (plantilla.outline) {
+          setOutlineColor(plantilla.outlineColor || "#FFFFFF"); setOutlineWidth(plantilla.outlineWidth || 0);
+        }
+      } else {
+        console.warn("STAGE 1: Plantilla ID from URL not found in PLANTILLAS array:", plantillaId);
+      }
+    }
+  }, [plantillaId]);
+
   const currentFont = FONTS.find((f) => f.id === font) || FONTS[0];
-  const textStyle: React.CSSProperties = { /* ... */ };
+  const textStyle: React.CSSProperties = { // 明确指定类型
+    fontFamily: currentFont.family,
+    fontSize: `${fontSize}px`,
+    color: color,
+    textAlign: alignment as "left" | "center" | "right",
+    letterSpacing: `${letterSpacing}px`,
+    lineHeight: lineHeight,
+    transform: `rotate(${rotation}deg)`,
+    textShadow: shadow ? `${shadowOffsetX}px ${shadowOffsetY}px ${shadowBlur}px ${shadowColor}` : "none",
+    WebkitTextStroke: outline ? `${outlineWidth}px ${outlineColor}` : "none",
+    padding: "20px",
+    maxWidth: "100%",
+    wordWrap: "break-word",
+  };
 
-  console.log("STAGE 2a: Adding Tabs, Textarea, Select for Font.");
+  // exportAsImage 和 saveDesign 函数暂时不添加回来，因为它们依赖 html2canvas 和 toast 的实际调用，
+  // 并且 exportAsImage 操作 DOM (previewRef.current)
+
+  console.log("STAGE 1: Rendering component. Current text:", text, "Current font:", currentFont.name);
 
   return (
     <div className="flex flex-col min-h-screen">
       <SiteHeader />
       <main className="flex-1 container mx-auto px-4 py-8">
-        {/* Breadcrumbs, H1, P 保持不变 */}
         <Breadcrumbs items={[ { label: "Inicio", href: "/" }, { label: "Editor de Lettering", href: "/editor" }, ]} />
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-3">Editor de Lettering Profesional</h1>
-          <p className="text-lg text-muted-foreground max-w-3xl">...</p>
+          <p className="text-lg text-muted-foreground max-w-3xl">
+            Crea diseños tipográficos personalizados con nuestro editor de lettering online. Personaliza fuentes,
+            colores, efectos y más para crear lettering único para cualquier ocasión.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
-          {/* 控制面板 - 开始添加真实 UI */}
-          <div> {/* 这个 div 是原始代码中左侧面板的容器 */}
-            {/* 暂时不使用 MobileEditorControls */}
-            <Tabs defaultValue="texto" className="w-full"> {/* 4. 添加 Tabs 结构 */}
-              <TabsList>
-                <TabsTrigger value="texto">Texto</TabsTrigger>
-                <TabsTrigger value="estilo">Estilo</TabsTrigger>
-                <TabsTrigger value="efectos">Efectos</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="texto" className="space-y-4 mt-4"> {/* 确保有 mt-4 或类似间距 */}
-                <div className="space-y-2">
-                  <Label htmlFor="text-input-real">Texto para Lettering</Label>
-                  <Textarea // 5. 使用真实的 Textarea 组件
-                    id="text-input-real"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    placeholder="Escribe tu texto aquí"
-                    className="resize-none"
-                    rows={3}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="font-select-real">Estilo de Letra</Label>
-                  <Select value={font} onValueChange={setFont}> {/* 6. 使用真实的 Select 组件 */}
-                    <SelectTrigger id="font-select-real">
-                      <SelectValue placeholder="Selecciona un estilo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {FONTS.map((fontItem) => ( // 改为 fontItem 避免与 state 变量 font 冲突
-                        <SelectItem key={fontItem.id} value={fontItem.id}>
-                          {fontItem.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                {/* 其他控件如 TouchSlider, Alineación 按钮等暂时不加 */}
-              </TabsContent>
-
-              <TabsContent value="estilo" className="space-y-4 mt-4">
-                <p>Contenido de Estilo (aún no implementado en esta fase)</p>
-              </TabsContent>
-              <TabsContent value="efectos" className="space-y-4 mt-4">
-                <p>Contenido de Efectos (aún no implementado en esta fase)</p>
-              </TabsContent>
-            </Tabs>
-            <p className="mt-2 text-xs">isMobile: {isMobile ? 'true' : 'false'}</p>
+          {/* 控制面板 - Stage 1: 仅一个简单的文本输入 */}
+          <div style={{border: '1px solid lightcoral', padding: '10px', background: '#fff0f0'}}>
+            <h3 className="text-lg font-semibold mb-2">Controles (Stage 1)</h3>
+            <div>
+              <Label htmlFor="textInputStage1">Texto:</Label>
+              <textarea // 使用原生 textarea 进行最基础的测试
+                id="textInputStage1"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Escribe algo..."
+                rows={3}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                style={{color: 'black', resize: 'none'}}
+              />
+            </div>
+            <p className="mt-2 text-xs">Font: {font}, Size: {fontSize}px, Color: {color}</p>
+            <p className="mt-1 text-xs">isMobile: {isMobile ? 'true' : 'false'}</p>
           </div>
 
-          {/* 预览区域 - 保持不变 */}
-          <div style={{border: '1px solid lightgray', padding: '10px', background: '#e9e9e9'}}>
-            <h3 className="text-lg font-semibold mb-2">Vista Previa (Stage 2a)</h3>
-            <div style={textStyle}>
+          {/* 预览区域 - Stage 1: 显示应用了 textStyle 的文本 */}
+          <div style={{border: '1px solid lightskyblue', padding: '10px', background: '#f0f8ff'}}>
+            <h3 className="text-lg font-semibold mb-2">Vista Previa (Stage 1)</h3>
+            <div style={textStyle}> {/* textStyle 将应用字体、颜色等 */}
               {text || "Escribe algo..."}
             </div>
           </div>
 
-          {/* SEO 内容块 - 保持不变 */}
-          {!isMobile && ( /* ... */ )}
+          {/* SEO 内容块 - 恢复自原始代码 */}
+          {!isMobile && (
+            <div className="mt-8">
+              <h2 className="text-2xl font-semibold mb-4">Crea Lettering Personalizado</h2>
+              <div className="prose max-w-none">
+                <p>
+                  Nuestro <strong>editor de lettering online</strong> te permite crear{" "}
+                  <strong>diseños tipográficos únicos</strong>
+                  para tus proyectos personales o profesionales. Ya sea que necesites <strong>letras decoradas</strong>{" "}
+                  para una invitación, <strong>caligrafía digital</strong> para un logo, o{" "}
+                  <strong>tipografía artística</strong> para redes sociales, nuestra herramienta te ofrece todas las
+                  opciones que necesitas.
+                </p>
+                <h3 className="text-xl font-medium mt-4 mb-2">Características del Editor de Lettering</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>
+                    <strong>Múltiples estilos de tipografía</strong> - Elige entre una amplia variedad de fuentes
+                    caligráficas y decorativas
+                  </li>
+                  <li>
+                    <strong>Personalización completa</strong> - Ajusta tamaño, color, espaciado y alineación
+                  </li>
+                  <li>
+                    <strong>Efectos profesionales</strong> - Añade sombras, contornos y rotación a tus diseños
+                  </li>
+                  <li>
+                    <strong>Exportación en alta calidad</strong> - Descarga tus creaciones en formato PNG o JPG
+                  </li>
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
-        <p style={{color: 'blue', marginTop: '20px', textAlign: 'center'}}>Stage 2a Test: Added Tabs, Textarea, and Font Select.</p>
+        <p style={{color: 'darkgreen', marginTop: '20px', textAlign: 'center', fontWeight: 'bold'}}>STAGE 1 TEST: All constants, states, basic useEffects, text input & preview, and SEO block are from original code (font loading DOM ops still commented).</p>
       </main>
       <SiteFooter />
     </div>
