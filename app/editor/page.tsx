@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import EditorClient from './editor-client'; // 确保路径正确
+import EditorClient from './editor-client'; // 导入 editor-client.tsx
 
 export default function EditorPage() {
   return (
