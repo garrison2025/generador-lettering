@@ -5,5 +5,5 @@
 /contacto  /contacto  200
 /privacidad  /privacidad  200
 
-# Redirección de fallback
-/*  /index.html  200
+# Redirección de fallback (la siguiente línea ha sido eliminada o comentada)
+# /*  /index.html  200
