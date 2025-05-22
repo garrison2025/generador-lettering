@@ -26,7 +26,6 @@ const FONTS = [
   { id: "dancing-script", name: "Caligrafía Elegante", family: "'Dancing Script', cursive" },
   { id: "pacifico", name: "Script Moderno", family: "'Pacifico', cursive" },
   { id: "permanent-marker", name: "Marcador", family: "'Permanent Marker', cursive" },
-  // ... (resto de tus fuentes, asegúrate que la lista sea completa si es necesario para la función Aleatorio)
   { id: "satisfy", name: "Caligrafía Fluida", family: "'Satisfy', cursive" },
   { id: "sacramento", name: "Lettering Fino", family: "'Sacramento', cursive" },
   { id: "great-vibes", name: "Caligrafía Clásica", family: "'Great Vibes', cursive" },
@@ -40,7 +39,6 @@ const COLORS = [
   { name: "Blanco", value: "#FFFFFF" },
   { name: "Primario", value: "#5B4FBE" },
   { name: "Secundario", value: "#FF6B6B" },
-  // ... (resto de tus colores, asegúrate que la lista sea completa)
   { name: "Acento", value: "#FFD93D" },
   { name: "Gris Oscuro", value: "#4A4A4A" },
   { name: "Rojo", value: "#E53935" },
@@ -59,11 +57,10 @@ export default function EditorClient() {
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  // --- Valores Iniciales para Reset ---
   const initialText = "Tu texto aquí";
   const initialFont = FONTS[0].id;
   const initialFontSize = 60;
-  const initialColor = "#5B4FBE"; // O tu color primario por defecto
+  const initialColor = "#5B4FBE";
   const initialAlignment = "center" as "left" | "center" | "right";
   const initialLetterSpacing = 0;
   const initialLineHeight = 1.5;
@@ -76,7 +73,6 @@ export default function EditorClient() {
   const initialOutline = false;
   const initialOutlineColor = "#FFFFFF";
   const initialOutlineWidth = 2;
-  // --- Fin Valores Iniciales ---
 
   const [text, setText] = useState(initialText);
   const [fontSize, setFontSize] = useState(initialFontSize);
@@ -86,17 +82,14 @@ export default function EditorClient() {
   const [lineHeight, setLineHeight] = useState(initialLineHeight);
   const [rotation, setRotation] = useState(initialRotation);
   const [font, setFont] = useState(initialFont);
-
   const [shadow, setShadow] = useState(initialShadow);
   const [shadowColor, setShadowColor] = useState(initialShadowColor);
   const [shadowBlur, setShadowBlur] = useState(initialShadowBlur);
   const [shadowOffsetX, setShadowOffsetX] = useState(initialShadowOffsetX);
   const [shadowOffsetY, setShadowOffsetY] = useState(initialShadowOffsetY);
-
   const [outline, setOutline] = useState(initialOutline);
   const [outlineColor, setOutlineColor] = useState(initialOutlineColor);
   const [outlineWidth, setOutlineWidth] = useState(initialOutlineWidth);
-
   const [isExporting, setIsExporting] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -121,26 +114,22 @@ export default function EditorClient() {
         if (plantilla.shadow) {
           setShadowColor(plantilla.shadowColor || initialShadowColor); setShadowBlur(plantilla.shadowBlur || initialShadowBlur);
           setShadowOffsetX(plantilla.shadowOffsetX || initialShadowOffsetX); setShadowOffsetY(plantilla.shadowOffsetY || initialShadowOffsetY);
-        } else { // Resetear valores de sombra si la plantilla no tiene
+        } else {
             setShadowColor(initialShadowColor); setShadowBlur(initialShadowBlur);
             setShadowOffsetX(initialShadowOffsetX); setShadowOffsetY(initialShadowOffsetY);
         }
         setOutline(plantilla.outline);
         if (plantilla.outline) {
           setOutlineColor(plantilla.outlineColor || initialOutlineColor); setOutlineWidth(plantilla.outlineWidth || initialOutlineWidth);
-        } else { // Resetear valores de contorno si la plantilla no tiene
+        } else {
             setOutlineColor(initialOutlineColor); setOutlineWidth(initialOutlineWidth);
         }
       }
-    } else { // Si no hay plantillaId, asegurarse de que los valores sean los iniciales (útil si se navega desde una plantilla a /editor sin plantilla)
-        // Esto puede ser redundante si los useState ya usan los valores iniciales, pero es una salvaguarda.
-        // Opcionalmente, se puede omitir este 'else' si el comportamiento deseado es mantener el último estado.
     }
-  }, [plantillaId]); // Añadidos los initialValues a las dependencias si fueran props o states externos, pero aquí son constantes.
+  }, [plantillaId]);
 
   const currentFont = FONTS.find((f) => f.id === font) || FONTS[0];
-
-  const textStyle: React.CSSProperties = { /* ... (sin cambios) ... */
+  const textStyle: React.CSSProperties = {
     fontFamily: currentFont.family, fontSize: `${fontSize}px`, color: color,
     textAlign: alignment, letterSpacing: `${letterSpacing}px`, lineHeight: lineHeight,
     transform: `rotate(${rotation}deg)`,
@@ -149,7 +138,7 @@ export default function EditorClient() {
     padding: "20px", maxWidth: "100%", wordWrap: "break-word",
   };
 
-  const exportAsImage = async (type: "png" | "jpg") => { /* ... (sin cambios) ... */
+  const exportAsImage = async (type: "png" | "jpg") => {
     if (!previewRef.current) { toast({ title: "Error de Vista Previa", description: "No se encontró el elemento de vista previa.", variant: "destructive" }); return; }
     try {
       setIsExporting(true);
@@ -159,15 +148,12 @@ export default function EditorClient() {
       const link = document.createElement("a");
       link.download = `lettering-${new Date().getTime()}.${type}`;
       link.href = dataUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
       toast({ title: "¡Imagen exportada con éxito!", description: `Tu diseño de lettering ha sido guardado como ${type.toUpperCase()}.`, });
     } catch (error) { console.error("Error al exportar la imagen:", error); toast({ title: "Error al exportar", description: "No se pudo generar la imagen. Por favor, inténtalo de nuevo.", variant: "destructive", });
     } finally { setIsExporting(false); }
   };
 
-  // --- FUNCIONES PARA BOTONES DE REINICIAR Y ALEATORIO ---
   const handleResetAll = () => {
     setText(initialText);
     setFont(initialFont);
@@ -188,42 +174,7 @@ export default function EditorClient() {
     toast({ title: "Editor Reiniciado", description: "Todos los ajustes han vuelto a sus valores por defecto." });
   };
 
-  const handleRandomize = () => {
-    if (FONTS.length > 0) {
-        const randomFont = FONTS[Math.floor(Math.random() * FONTS.length)];
-        setFont(randomFont.id);
-    }
-    if (COLORS.length > 0) {
-        const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-        setColor(randomColor.value);
-    }
-    setFontSize(Math.floor(Math.random() * (120 - 40 + 1)) + 40); // Entre 40 y 120px
-    setLetterSpacing(Math.floor(Math.random() * (10 - (-2) + 1)) + (-2)); // Entre -2 y 10px
-    setLineHeight(parseFloat((Math.random() * (2.5 - 1) + 1).toFixed(1))); // Entre 1.0 y 2.5
-    setRotation(Math.floor(Math.random() * (15 - (-15) + 1)) + (-15)); // Entre -15 y 15 grados
-    
-    // Aleatorizar efectos también (50% de probabilidad para cada uno)
-    const будетSombra = Math.random() < 0.5;
-    setShadow(будетSombra);
-    if (будетSombra && COLORS.length > 0) {
-        const randomShadowColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-        setShadowColor(randomShadowColor.value);
-        setShadowBlur(Math.floor(Math.random() * 11)); // 0-10
-        setShadowOffsetX(Math.floor(Math.random() * 7) - 3); // -3 a 3
-        setShadowOffsetY(Math.floor(Math.random() * 7) - 3); // -3 a 3
-    }
-
-    const будетКонтур = Math.random() < 0.5;
-    setOutline(будетКонтур);
-    if (будетКонтур && COLORS.length > 0) {
-        const randomOutlineColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-        setOutlineColor(randomOutlineColor.value);
-        setOutlineWidth(parseFloat((Math.random() * (3 - 0.5) + 0.5).toFixed(1))); // 0.5 a 3
-    }
-
-    toast({ title: "¡Estilo Aleatorio Aplicado!", description: "Se han aplicado nuevos ajustes al azar." });
-  };
-  // --- FIN FUNCIONES ---
+  // const handleRandomize = () => { ... LÓGICA DE ALEATORIO ELIMINADA ... };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -240,11 +191,10 @@ export default function EditorClient() {
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
           <div> {/* Panel de Controles */}
             <Tabs defaultValue="texto" className="w-full">
-              {/* ... (TabsList y TabsContent de Texto, Estilo, Efectos sin cambios en su estructura interna) ... */}
               <TabsList> <TabsTrigger value="texto">Texto</TabsTrigger> <TabsTrigger value="estilo">Estilo</TabsTrigger> <TabsTrigger value="efectos">Efectos</TabsTrigger> </TabsList>
-              <TabsContent value="texto" className="space-y-4 mt-4"> <div className="space-y-2"> <Label htmlFor="text-input">Texto para Lettering</Label> <Textarea id="text-input" value={text} onChange={(e) => setText(e.target.value)} placeholder="Escribe tu texto aquí..." rows={3}/> </div> <div className="space-y-2"> <Label htmlFor="font-select">Estilo de Letra</Label> <Select value={font} onValueChange={setFont}> <SelectTrigger id="font-select"><SelectValue placeholder="Selecciona una fuente" /></SelectTrigger> <SelectContent>{FONTS.map((f) => (<SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>))}</SelectContent> </Select> </div> <TouchSlider label="Tamaño" min={10} max={200} step={1} value={fontSize} onChange={setFontSize} unit="px"/> <div className="space-y-2"> <Label>Alineación</Label> <div className="flex gap-2"> <Button variant={alignment === "left" ? "default" : "outline"} size="icon" onClick={() => setAlignment("left")}><AlignLeft className="h-4 w-4" /></Button> <Button variant={alignment === "center" ? "default" : "outline"} size="icon" onClick={() => setAlignment("center")}><AlignCenter className="h-4 w-4" /></Button> <Button variant={alignment === "right" ? "default" : "outline"} size="icon" onClick={() => setAlignment("right")}><AlignRight className="h-4 w-4" /></Button> </div> </div> </TabsContent>
-              <TabsContent value="estilo" className="space-y-4 mt-4"> <div className="space-y-2"> <Label htmlFor="color-select-estilo">Color del Texto</Label> <TouchColorPicker value={color} onChange={setColor} presetColors={COLORS.map((c) => c.value)}/> </div> <TouchSlider label="Espaciado entre Letras" min={-5} max={20} step={0.5} value={letterSpacing} onChange={setLetterSpacing} unit="px"/> <TouchSlider label="Altura de Línea" min={0.8} max={3} step={0.1} value={lineHeight} onChange={setLineHeight}/> <TouchSlider label="Rotación" min={-180} max={180} step={1} value={rotation} onChange={setRotation} unit="°"/> <Button variant="outline" size="sm" onClick={() => setRotation(0)} className="w-full mt-1"><RotateCcw className="h-4 w-4 mr-2" />Restablecer Rotación</Button> </TabsContent>
-              <TabsContent value="efectos" className="space-y-4 mt-4"> <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="shadow-switch">Sombra</Label> <Switch id="shadow-switch" checked={shadow} onCheckedChange={setShadow} /> </div> {shadow && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-color">Color</Label> <TouchColorPicker id="shadow-color" value={shadowColor} onChange={setShadowColor} presetColors={COLORS.map(c=>c.value)} className="mt-1" /> </div> <div> <Label htmlFor="shadow-blur">Desenfoque</Label> <TouchSlider id="shadow-blur" label="" min={0} max={20} step={1} value={shadowBlur} onChange={setShadowBlur} className="mt-1"/> </div> </div> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-offset-x">Desplazamiento X</Label> <TouchSlider id="shadow-offset-x" label="" min={-20} max={20} step={1} value={shadowOffsetX} onChange={setShadowOffsetX}/> </div> <div> <Label htmlFor="shadow-offset-y">Desplazamiento Y</Label> <TouchSlider id="shadow-offset-y" label="" min={-20} max={20} step={1} value={shadowOffsetY} onChange={setShadowOffsetY}/> </div> </div> </div> )} </div> <div className="space-y-2 pt-4 mt-4 border-t"> <div className="flex items-center justify-between"> <Label htmlFor="outline-switch">Contorno</Label> <Switch id="outline-switch" checked={outline} onCheckedChange={setOutline} /> </div> {outline && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="outline-color">Color</Label> <TouchColorPicker id="outline-color" value={outlineColor} onChange={setOutlineColor} presetColors={COLORS.map(c=>c.value)} className="mt-1" /> </div> <div> <Label htmlFor="outline-width">Grosor</Label> <TouchSlider id="outline-width" label="" min={0.5} max={10} step={0.5} value={outlineWidth} onChange={setOutlineWidth} unit="px" className="mt-1"/> </div> </div> </div> )} </div> </TabsContent>
+              <TabsContent value="texto" className="space-y-4 mt-4"> {/* ... (Contenido de Texto sin cambios) ... */} <div className="space-y-2"> <Label htmlFor="text-input">Texto para Lettering</Label> <Textarea id="text-input" value={text} onChange={(e) => setText(e.target.value)} placeholder="Escribe tu texto aquí..." rows={3}/> </div> <div className="space-y-2"> <Label htmlFor="font-select">Estilo de Letra</Label> <Select value={font} onValueChange={setFont}> <SelectTrigger id="font-select"><SelectValue placeholder="Selecciona una fuente" /></SelectTrigger> <SelectContent>{FONTS.map((f) => (<SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>))}</SelectContent> </Select> </div> <TouchSlider label="Tamaño" min={10} max={200} step={1} value={fontSize} onChange={setFontSize} unit="px"/> <div className="space-y-2"> <Label>Alineación</Label> <div className="flex gap-2"> <Button variant={alignment === "left" ? "default" : "outline"} size="icon" onClick={() => setAlignment("left")}><AlignLeft className="h-4 w-4" /></Button> <Button variant={alignment === "center" ? "default" : "outline"} size="icon" onClick={() => setAlignment("center")}><AlignCenter className="h-4 w-4" /></Button> <Button variant={alignment === "right" ? "default" : "outline"} size="icon" onClick={() => setAlignment("right")}><AlignRight className="h-4 w-4" /></Button> </div> </div> </TabsContent>
+              <TabsContent value="estilo" className="space-y-4 mt-4"> {/* ... (Contenido de Estilo sin cambios) ... */} <div className="space-y-2"> <Label htmlFor="color-select-estilo">Color del Texto</Label> <TouchColorPicker value={color} onChange={setColor} presetColors={COLORS.map((c) => c.value)}/> </div> <TouchSlider label="Espaciado entre Letras" min={-5} max={20} step={0.5} value={letterSpacing} onChange={setLetterSpacing} unit="px"/> <TouchSlider label="Altura de Línea" min={0.8} max={3} step={0.1} value={lineHeight} onChange={setLineHeight}/> <TouchSlider label="Rotación" min={-180} max={180} step={1} value={rotation} onChange={setRotation} unit="°"/> <Button variant="outline" size="sm" onClick={() => setRotation(0)} className="w-full mt-1"><RotateCcw className="h-4 w-4 mr-2" />Restablecer Rotación</Button> </TabsContent>
+              <TabsContent value="efectos" className="space-y-4 mt-4"> {/* ... (Contenido de Efectos sin cambios) ... */} <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="shadow-switch">Sombra</Label> <Switch id="shadow-switch" checked={shadow} onCheckedChange={setShadow} /> </div> {shadow && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-color">Color</Label> <TouchColorPicker id="shadow-color" value={shadowColor} onChange={setShadowColor} presetColors={COLORS.map(c=>c.value)} className="mt-1" /> </div> <div> <Label htmlFor="shadow-blur">Desenfoque</Label> <TouchSlider id="shadow-blur" label="" min={0} max={20} step={1} value={shadowBlur} onChange={setShadowBlur} className="mt-1"/> </div> </div> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-offset-x">Desplazamiento X</Label> <TouchSlider id="shadow-offset-x" label="" min={-20} max={20} step={1} value={shadowOffsetX} onChange={setShadowOffsetX}/> </div> <div> <Label htmlFor="shadow-offset-y">Desplazamiento Y</Label> <TouchSlider id="shadow-offset-y" label="" min={-20} max={20} step={1} value={shadowOffsetY} onChange={setShadowOffsetY}/> </div> </div> </div> )} </div> <div className="space-y-2 pt-4 mt-4 border-t"> <div className="flex items-center justify-between"> <Label htmlFor="outline-switch">Contorno</Label> <Switch id="outline-switch" checked={outline} onCheckedChange={setOutline} /> </div> {outline && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="outline-color">Color</Label> <TouchColorPicker id="outline-color" value={outlineColor} onChange={setOutlineColor} presetColors={COLORS.map(c=>c.value)} className="mt-1" /> </div> <div> <Label htmlFor="outline-width">Grosor</Label> <TouchSlider id="outline-width" label="" min={0.5} max={10} step={0.5} value={outlineWidth} onChange={setOutlineWidth} unit="px" className="mt-1"/> </div> </div> </div> )} </div> </TabsContent>
             </Tabs>
           </div>
 
@@ -252,25 +202,23 @@ export default function EditorClient() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Vista Previa (Acciones)</h3>
+                  <h3 className="text-lg font-semibold">Vista Previa (Solo Reiniciar)</h3> {/* Título actualizado */}
                   <Popover> {/* ... (Popover de Exportar sin cambios) ... */}
                     <PopoverTrigger asChild> <Button variant="outline" size="sm" disabled={isExporting}> {isExporting ? ( <Loader2 className="h-4 w-4 animate-spin mr-2" /> ) : ( <Download className="h-4 w-4 mr-2" /> )} Exportar </Button> </PopoverTrigger>
                     <PopoverContent className="w-56" align="end"> <div className="grid gap-2"> <Button variant="ghost" size="sm" onClick={() => exportAsImage("png")} className="justify-start" disabled={isExporting}>PNG (Transparente)</Button> <Button variant="ghost" size="sm" onClick={() => exportAsImage("jpg")} className="justify-start" disabled={isExporting}>JPG (Fondo Blanco)</Button> </div> </PopoverContent>
                   </Popover>
                 </div>
                 
-                <div ref={previewRef} style={{ border: '1px solid mediumseagreen', padding: '10px', background: '#f0fff8' }} className="lettering-preview-capture-area bg-white rounded-md overflow-hidden">
+                <div ref={previewRef} style={{ border: '1px solid goldenrod', padding: '10px', background: '#fff8e1' }} className="lettering-preview-capture-area bg-white rounded-md overflow-hidden"> {/* Color de borde actualizado */}
                   <div style={textStyle}> {text || "Escribe algo..."} </div>
                 </div>
 
-                {/* BOTONES DE REINICIAR Y ALEATORIO AÑADIDOS AQUÍ */}
-                <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2"> {/* Ajustado para 2 columnas */}
+                {/* BOTÓN DE REINICIAR - Botón de Aleatorio ELIMINADO */}
+                <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-1"> {/* Ajustado a 1 columna */}
                   <Button variant="outline" size="sm" onClick={handleResetAll}>
                     Reiniciar Todo
                   </Button>
-                  <Button variant="outline" size="sm" onClick={handleRandomize}>
-                    Estilo Aleatorio
-                  </Button>
+                  {/* El botón de Aleatorio ha sido eliminado */}
                 </div>
               </CardContent>
             </Card>
