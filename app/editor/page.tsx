@@ -1,11 +1,12 @@
 "use client"
 import React from 'react';
+import EditorClient from './editor-client'; // 确保路径正确
 
-export default function EditorPageSimpleTest() {
+export default function EditorPage() {
   return (
-    <div style={{ padding: '20px', fontSize: '20px', textAlign: 'center', color: 'blue' }}>
-      <h1>Editor Path - Simple Test</h1>
-      <p>If you see this, the editor *path* itself can render a simple component.</p>
-    </div>
+    <>
+      <p style={{color: 'purple', textAlign: 'center'}}>Now rendering EditorClient from page.tsx</p>
+      <EditorClient />
+    </>
   );
 }
