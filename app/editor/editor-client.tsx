@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import dynamic from "next/dynamic" // 虽然未使用，但保持与您原始版本一致
+import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -11,22 +11,22 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+// Popover, PopoverContent, PopoverTrigger 仍然导入，以防其他地方用到，但此处的特定实例会被移除
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover" 
 import { useSearchParams } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import html2canvas from "html2canvas"
-import { LoadingSpinner } from "@/components/ui/loading-spinner" // 假设这个组件存在
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { MobileEditorControls } from "@/components/mobile-editor-controls" // 假设这个组件存在
-import { TouchColorPicker } from "@/components/ui/touch-color-picker" // 假设这个组件存在
-import { TouchSlider } from "@/components/ui/touch-slider" // 假设这个组件存在
-// MobileLetteringPreview 仍然导入，但我们会在JSX中替换它
-import { MobileLetteringPreview } from "@/components/mobile-lettering-preview" // 假设这个组件存在
+import { MobileEditorControls } from "@/components/mobile-editor-controls"
+import { TouchColorPicker } from "@/components/ui/touch-color-picker"
+import { TouchSlider } from "@/components/ui/touch-slider"
+import { MobileLetteringPreview } from "@/components/mobile-lettering-preview"
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 
-// Dynamically import heavy components (未被使用)
+// Dynamically import heavy components
 const TabsComponent = dynamic(() => import("../components/editor/tabs-component"), {
   loading: () => (
     <div className="h-96 flex items-center justify-center">
@@ -36,6 +36,7 @@ const TabsComponent = dynamic(() => import("../components/editor/tabs-component"
   ssr: false,
 })
 
+// 定义字体和模板数据（来自你提供的版本）
 const FONTS = [
   { id: "dancing-script", name: "Caligrafía Elegante", family: "'Dancing Script', cursive" },
   { id: "pacifico", name: "Script Moderno", family: "'Pacifico', cursive" },
@@ -49,19 +50,237 @@ const FONTS = [
   { id: "permanent-marker", name: "Marcador", family: "'Permanent Marker', cursive" },
 ];
 const COLORS = [
-  { name: "Negro", value: "#000000" }, { name: "Blanco", value: "#FFFFFF" },
-  { name: "Primario", value: "#5B4FBE" }, { name: "Secundario", value: "#FF6B6B" },
-  { name: "Acento", value: "#FFD93D" }, { name: "Gris Oscuro", value: "#4A4A4A" },
-  { name: "Rojo", value: "#E53935" }, { name: "Verde", value: "#43A047" },
-  { name: "Azul", value: "#1E88E5" }, { name: "Morado", value: "#8E24AA" },
+  { name: "Negro", value: "#000000" },
+  { name: "Blanco", value: "#FFFFFF" },
+  { name: "Primario", value: "#5B4FBE" },
+  { name: "Secundario", value: "#FF6B6B" },
+  { name: "Acento", value: "#FFD93D" },
+  { name: "Gris Oscuro", value: "#4A4A4A" },
+  { name: "Rojo", value: "#E53935" },
+  { name: "Verde", value: "#43A047" },
+  { name: "Azul", value: "#1E88E5" },
+  { name: "Morado", value: "#8E24AA" },
 ];
 const PLANTILLAS = [
-  { id: "boda", categoria: "ocasiones", nombre: "Invitación de Boda", texto: "Juan & María\n12 de Junio 2023", estilo: "dancing-script", color: "#5B4FBE", fontSize: 70, letterSpacing: 1, lineHeight: 1.8, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.3)", shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "cumpleanos", categoria: "ocasiones", nombre: "Feliz Cumpleaños", texto: "¡Feliz Cumpleaños!", estilo: "pacifico", color: "#FF6B6B", fontSize: 80, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.2)", shadowBlur: 5, shadowOffsetX: 1, shadowOffsetY: 1, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  // ... (加入您完整的 PLANTILLAS 数据)
-  { id: "menu", categoria: "negocios", nombre: "Menú Restaurante", texto: "Nuestro Menú", estilo: "great-vibes", color: "#4A4A4A", fontSize: 70, letterSpacing: 1, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: false, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
+  {
+    id: "boda",
+    categoria: "ocasiones",
+    nombre: "Invitación de Boda",
+    texto: "Juan & María\n12 de Junio 2023",
+    estilo: "dancing-script",
+    color: "#5B4FBE",
+    fontSize: 70,
+    letterSpacing: 1,
+    lineHeight: 1.8,
+    alignment: "center",
+    rotation: 0,
+    shadow: true,
+    shadowColor: "rgba(0,0,0,0.3)",
+    shadowBlur: 4,
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+    outline: false,
+  },
+  {
+    id: "cumpleanos",
+    categoria: "ocasiones",
+    nombre: "Feliz Cumpleaños",
+    texto: "¡Feliz Cumpleaños!",
+    estilo: "pacifico",
+    color: "#FF6B6B",
+    fontSize: 80,
+    letterSpacing: 2,
+    lineHeight: 1.5,
+    alignment: "center",
+    rotation: 0,
+    shadow: true,
+    shadowColor: "rgba(0,0,0,0.2)",
+    shadowBlur: 5,
+    shadowOffsetX: 1,
+    shadowOffsetY: 1,
+    outline: false,
+  },
+  {
+    id: "graduacion",
+    categoria: "ocasiones",
+    nombre: "Graduación",
+    texto: "¡Felicidades\nGraduado 2023!",
+    estilo: "great-vibes",
+    color: "#4A4A4A",
+    fontSize: 65,
+    letterSpacing: 1,
+    lineHeight: 1.6,
+    alignment: "center",
+    rotation: 0,
+    shadow: false,
+    outline: true,
+    outlineColor: "#FFD93D",
+    outlineWidth: 1,
+  },
+  {
+    id: "motivacion1",
+    categoria: "frases",
+    nombre: "Motivación Diaria",
+    texto: "Nunca te rindas",
+    estilo: "permanent-marker",
+    color: "#E53935",
+    fontSize: 75,
+    letterSpacing: 1,
+    lineHeight: 1.5,
+    alignment: "center",
+    rotation: 0,
+    shadow: true,
+    shadowColor: "rgba(0,0,0,0.4)",
+    shadowBlur: 3,
+    shadowOffsetX: 3,
+    shadowOffsetY: 3,
+    outline: false,
+  },
+  {
+    id: "motivacion2",
+    categoria: "frases",
+    nombre: "Éxito",
+    texto: "El éxito es la suma de pequeños esfuerzos",
+    estilo: "satisfy",
+    color: "#1E88E5",
+    fontSize: 60,
+    letterSpacing: 0,
+    lineHeight: 1.5,
+    alignment: "center",
+    rotation: 0,
+    shadow: false,
+    outline: false,
+  },
+  {
+    id: "amor",
+    categoria: "frases",
+    nombre: "Amor",
+    texto: "Ama y sé feliz",
+    estilo: "sacramento",
+    color: "#FF6B6B",
+    fontSize: 85,
+    letterSpacing: 2,
+    lineHeight: 1.5,
+    alignment: "center",
+    rotation: 0,
+    shadow: true,
+    shadowColor: "rgba(0,0,0,0.2)",
+    shadowBlur: 4,
+    shadowOffsetX: 1,
+    shadowOffsetY: 1,
+    outline: false,
+  },
+  {
+    id: "navidad",
+    categoria: "festividades",
+    nombre: "Navidad",
+    texto: "¡Feliz Navidad\ny Próspero Año Nuevo!",
+    estilo: "lobster",
+    color: "#43A047",
+    fontSize: 65,
+    letterSpacing: 1,
+    lineHeight: 1.6,
+    alignment: "center",
+    rotation: 0,
+    shadow: true,
+    shadowColor: "#FF6B6B",
+    shadowBlur: 4,
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+    outline: false,
+  },
+  {
+    id: "annonuevo",
+    categoria: "festividades",
+    nombre: "Año Nuevo",
+    texto: "¡Feliz 2023!",
+    estilo: "kaushan-script",
+    color: "#FFD93D",
+    fontSize: 90,
+    letterSpacing: 2,
+    lineHeight: 1.5,
+    alignment: "center",
+    rotation: 0,
+    shadow: true,
+    shadowColor: "#4A4A4A",
+    shadowBlur: 6,
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+    outline: false,
+  },
+  {
+    id: "halloween",
+    categoria: "festividades",
+    nombre: "Halloween",
+    texto: "Noche de Terror",
+    estilo: "amatic-sc",
+    color: "#8E24AA",
+    fontSize: 85,
+    letterSpacing: 3,
+    lineHeight: 1.5,
+    alignment: "center",
+    rotation: 0,
+    shadow: true,
+    shadowColor: "#000000",
+    shadowBlur: 8,
+    shadowOffsetX: 4,
+    shadowOffsetY: 4,
+    outline: false,
+  },
+  {
+    id: "logo",
+    categoria: "negocios",
+    nombre: "Logo Empresa",
+    texto: "Mi Empresa",
+    estilo: "caveat",
+    color: "#5B4FBE",
+    fontSize: 75,
+    letterSpacing: 2,
+    lineHeight: 1.5,
+    alignment: "center",
+    rotation: 0,
+    shadow: false,
+    outline: true,
+    outlineColor: "#FFFFFF",
+    outlineWidth: 2,
+  },
+  {
+    id: "promocion",
+    categoria: "negocios",
+    nombre: "Promoción",
+    texto: "¡OFERTA\nESPECIAL!",
+    estilo: "permanent-marker",
+    color: "#E53935",
+    fontSize: 80,
+    letterSpacing: 1,
+    lineHeight: 1.4,
+    alignment: "center",
+    rotation: -5,
+    shadow: true,
+    shadowColor: "#000000",
+    shadowBlur: 2,
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+    outline: true,
+    outlineColor: "#FFD93D",
+    outlineWidth: 3,
+  },
+  {
+    id: "menu",
+    categoria: "negocios",
+    nombre: "Menú Restaurante",
+    texto: "Nuestro Menú",
+    estilo: "great-vibes",
+    color: "#4A4A4A",
+    fontSize: 70,
+    letterSpacing: 1,
+    lineHeight: 1.5,
+    alignment: "center",
+    rotation: 0,
+    shadow: false,
+    outline: false,
+  },
 ];
-
 
 export default function EditorClient() {
   const searchParams = useSearchParams();
@@ -72,21 +291,21 @@ export default function EditorClient() {
   const [text, setText] = useState("Tu texto aquí");
   const [fontSize, setFontSize] = useState(60);
   const [color, setColor] = useState("#5B4FBE");
-  const [alignment, setAlignment] = useState<"left" | "center" | "right">("center");
+  const [alignment, setAlignment] = useState<"left" | "center" | "right">("center"); // Typed alignment
   const [letterSpacing, setLetterSpacing] = useState(0);
   const [lineHeight, setLineHeight] = useState(1.5);
   const [rotation, setRotation] = useState(0);
   const [font, setFont] = useState(FONTS[0].id);
 
   const [shadow, setShadow] = useState(false);
-  const [shadowColor, setShadowColor] = useState("#000000");
-  const [shadowBlur, setShadowBlur] = useState(5);
-  const [shadowOffsetX, setShadowOffsetX] = useState(2);
-  const [shadowOffsetY, setShadowOffsetY] = useState(2);
+  const [shadowColor, setShadowColorState] = useState("#000000"); // Renamed to avoid conflict
+  const [shadowBlur, setShadowBlurState] = useState(5);       // Renamed to avoid conflict
+  const [shadowOffsetX, setShadowOffsetXState] = useState(2);   // Renamed to avoid conflict
+  const [shadowOffsetY, setShadowOffsetYState] = useState(2);   // Renamed to avoid conflict
 
   const [outline, setOutline] = useState(false);
-  const [outlineColor, setOutlineColor] = useState("#FFFFFF");
-  const [outlineWidth, setOutlineWidth] = useState(2);
+  const [outlineColor, setOutlineColorState] = useState("#FFFFFF"); // Renamed to avoid conflict
+  const [outlineWidth, setOutlineWidthState] = useState(2);     // Renamed to avoid conflict
 
   const [isExporting, setIsExporting] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -109,21 +328,21 @@ export default function EditorClient() {
         setFont(plantilla.estilo);
         setFontSize(plantilla.fontSize);
         setColor(plantilla.color);
-        setAlignment(plantilla.alignment as "left" | "center" | "right");
+        setAlignment(plantilla.alignment as "left" | "center" | "right"); // Ensure type cast
         setLetterSpacing(plantilla.letterSpacing);
         setLineHeight(plantilla.lineHeight);
         setRotation(plantilla.rotation);
         setShadow(plantilla.shadow);
         if (plantilla.shadow) {
-          setShadowColor(plantilla.shadowColor || "#000000");
-          setShadowBlur(plantilla.shadowBlur || 0);
-          setShadowOffsetX(plantilla.shadowOffsetX || 0);
-          setShadowOffsetY(plantilla.shadowOffsetY || 0);
+          setShadowColorState(plantilla.shadowColor || "#000000");
+          setShadowBlurState(plantilla.shadowBlur || 0);
+          setShadowOffsetXState(plantilla.shadowOffsetX || 0);
+          setShadowOffsetYState(plantilla.shadowOffsetY || 0);
         }
         setOutline(plantilla.outline);
         if (plantilla.outline) {
-          setOutlineColor(plantilla.outlineColor || "#FFFFFF");
-          setOutlineWidth(plantilla.outlineWidth || 0);
+          setOutlineColorState(plantilla.outlineColor || "#FFFFFF");
+          setOutlineWidthState(plantilla.outlineWidth || 0);
         }
       }
     }
@@ -139,7 +358,7 @@ export default function EditorClient() {
     lineHeight: lineHeight,
     transform: `rotate(${rotation}deg)`,
     textShadow: shadow ? `${shadowOffsetX}px ${shadowOffsetY}px ${shadowBlur}px ${shadowColor}` : "none",
-    WebkitTextStroke: outline ? `${outlineWidth}px ${outlineColor}` : "none",
+    WebkitTextStroke: outline ? `${outlineWidth}px ${outlineColor}` : "none", // Use state variables for outline
     padding: "20px",
     maxWidth: "100%",
     wordWrap: "break-word",
@@ -164,9 +383,9 @@ export default function EditorClient() {
       const link = document.createElement("a");
       link.download = `lettering-${new Date().getTime()}.${type}`;
       link.href = dataUrl;
-      document.body.appendChild(link); // Firefox fix
+      document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link); // Clean up
+      document.body.removeChild(link);
       toast({
         title: "¡Imagen exportada con éxito!",
         description: `Tu diseño de lettering ha sido guardado como ${type.toUpperCase()}.`,
@@ -231,8 +450,8 @@ export default function EditorClient() {
                   <Button variant="outline" size="sm" onClick={() => setRotation(0)} className="w-full mt-1"><RotateCcw className="h-4 w-4 mr-2" />Restablecer Rotación</Button>
                 </TabsContent>
                 <TabsContent value="efectos" className="space-y-4">
-                  <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="shadow-switch">Sombra</Label> <Switch id="shadow-switch" checked={shadow} onCheckedChange={setShadow} /> </div> {shadow && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-color">Color</Label> <TouchColorPicker value={shadowColor} onChange={setShadowColor} className="mt-1" /> </div> <div> <TouchSlider label="Desenfoque" min={0} max={20} step={1} value={shadowBlur} onChange={setShadowBlur} className="mt-1"/> </div> </div> <div className="grid grid-cols-2 gap-2"> <TouchSlider label="Desplazamiento X" min={-20} max={20} step={1} value={shadowOffsetX} onChange={setShadowOffsetX}/> <TouchSlider label="Desplazamiento Y" min={-20} max={20} step={1} value={shadowOffsetY} onChange={setShadowOffsetY}/> </div> </div> )} </div>
-                  <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="outline-switch">Contorno</Label> <Switch id="outline-switch" checked={outline} onCheckedChange={setOutline} /> </div> {outline && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="outline-color">Color</Label> <TouchColorPicker value={outlineColor} onChange={setOutlineColor} className="mt-1" /> </div> <TouchSlider label="Grosor" min={0.5} max={10} step={0.5} value={outlineWidth} onChange={setOutlineWidth} className="mt-1"/> </div> </div> )} </div>
+                  <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="shadow-switch">Sombra</Label> <Switch id="shadow-switch" checked={shadow} onCheckedChange={setShadow} /> </div> {shadow && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="shadow-color">Color</Label> <TouchColorPicker value={shadowColor} onChange={setShadowColorState} className="mt-1" /> </div> <div> <TouchSlider label="Desenfoque" min={0} max={20} step={1} value={shadowBlur} onChange={setShadowBlurState} className="mt-1"/> </div> </div> <div className="grid grid-cols-2 gap-2"> <TouchSlider label="Desplazamiento X" min={-20} max={20} step={1} value={shadowOffsetX} onChange={setShadowOffsetXState}/> <TouchSlider label="Desplazamiento Y" min={-20} max={20} step={1} value={shadowOffsetY} onChange={setShadowOffsetYState}/> </div> </div> )} </div>
+                  <div className="space-y-2"> <div className="flex items-center justify-between"> <Label htmlFor="outline-switch">Contorno</Label> <Switch id="outline-switch" checked={outline} onCheckedChange={setOutline} /> </div> {outline && ( <div className="space-y-3 mt-2 pl-4 border-l-2 border-muted"> <div className="grid grid-cols-2 gap-2"> <div> <Label htmlFor="outline-color">Color</Label> <TouchColorPicker value={outlineColor} onChange={setOutlineColorState} className="mt-1" /> </div> <TouchSlider label="Grosor" min={0.5} max={10} step={0.5} value={outlineWidth} onChange={setOutlineWidthState} className="mt-1"/> </div> </div> )} </div>
                 </TabsContent>
               </Tabs>
             </MobileEditorControls>
@@ -253,9 +472,9 @@ export default function EditorClient() {
                             setColor(plantilla.color); setAlignment(plantilla.alignment as "left" | "center" | "right");
                             setLetterSpacing(plantilla.letterSpacing); setLineHeight(plantilla.lineHeight);
                             setRotation(plantilla.rotation); setShadow(plantilla.shadow);
-                            if (plantilla.shadow) { setShadowColor(plantilla.shadowColor!); setShadowBlur(plantilla.shadowBlur!); setShadowOffsetX(plantilla.shadowOffsetX!); setShadowOffsetY(plantilla.shadowOffsetY!); }
+                            if (plantilla.shadow) { setShadowColorState(plantilla.shadowColor!); setShadowBlurState(plantilla.shadowBlur!); setShadowOffsetXState(plantilla.shadowOffsetX!); setShadowOffsetYState(plantilla.shadowOffsetY!); }
                             setOutline(plantilla.outline);
-                            if (plantilla.outline) { setOutlineColor(plantilla.outlineColor!); setOutlineWidth(plantilla.outlineWidth!); }
+                            if (plantilla.outline) { setOutlineColorState(plantilla.outlineColor!); setOutlineWidthState(plantilla.outlineWidth!); }
                           }}
                         >
                           {plantilla.nombre}
@@ -276,38 +495,34 @@ export default function EditorClient() {
                 <div className="mb-4 flex justify-between items-center">
                   <h2 className="text-xl font-bold">Vista Previa del Lettering</h2>
                   <div className="flex gap-2">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" size="sm" disabled={isExporting}>
-                          {isExporting ? (<Loader2 className="h-4 w-4 animate-spin mr-2" />) : (<Download className="h-4 w-4 mr-2" />)}
-                          Exportar
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-56" align="end">
-                        <div className="grid gap-2">
-                          <Button variant="outline" size="sm" onClick={() => exportAsImage("png")} className="justify-start" disabled={isExporting}>PNG (Transparente)</Button>
-                          <Button variant="outline" size="sm" onClick={() => exportAsImage("jpg")} className="justify-start" disabled={isExporting}>JPG (Fondo Blanco)</Button>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                    {/***********************************}
+                    {/* ********   修改开始   **********/}
+                    {/***********************************}
+                    {/* 原来的 Popover 结构被临时替换为一个简单的按钮 */}
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => alert('Popover de exportación temporalmente deshabilitado para prueba.')}
+                    >
+                      Exportar (Prueba Deshabilitada)
+                    </Button>
+                    {/***********************************}
+                    {/* ********   修改结束   **********/}
+                    {/***********************************}
                   </div>
                 </div>
                 <div className="border rounded-lg p-4 bg-[#F4F4F8]">
-                  {/***********************************}
-                  {/* ********   修改开始   **********/}
-                  {/***********************************}
                   {isMobile ? (
-                    <div style={{ border: "2px dashed blue", padding: "20px", textAlign: "center", color: "blue", backgroundColor: "#e0e0ff" }}>
-                      移动端预览区域 (MobileLetteringPreview 已被临时禁用以便测试)
-                    </div>
+                    <MobileLetteringPreview
+                      text={text || "Tu texto aquí"}
+                      style={textStyle}
+                      onExport={() => exportAsImage("png")}
+                    />
                   ) : (
                     <div className="lettering-preview bg-white rounded-md overflow-hidden" ref={previewRef}>
                       <div style={textStyle}>{text || "Tu texto aquí"}</div>
                     </div>
                   )}
-                  {/***********************************}
-                  {/* ********   修改结束   **********/}
-                  {/***********************************}
                 </div>
                 <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <Button variant="outline" size="sm" onClick={() => { setText(""); setFont(FONTS[0].id); setFontSize(60); setColor("#5B4FBE"); setAlignment("center"); setLetterSpacing(0); setLineHeight(1.5); setRotation(0); setShadow(false); setOutline(false); }}>Reiniciar</Button>
