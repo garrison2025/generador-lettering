@@ -150,7 +150,7 @@ export default function EditorClient() {
     wordWrap: "break-word",
   };
 
-  // console.log("STAGE 2d - Step A: Rotation Slider UNCOMMENTED, Reset Button REMAINS COMMENTED.");
+  // console.log("STAGE 2d - Step B: Both Rotation Slider and Reset Button UNCOMMENTED.");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -279,13 +279,11 @@ export default function EditorClient() {
                   unit="°"
                 />
 
-                {/* 2. “重置旋转”按钮 保持注释状态 */}
-                {/*
+                {/* 2. “重置旋转”按钮 已取消注释 */}
                 <Button variant="outline" size="sm" onClick={() => setRotation(0)} className="w-full mt-1">
                   <RotateCcw className="h-4 w-4 mr-2" />
                   Restablecer Rotación
                 </Button>
-                */}
               </TabsContent>
 
               <TabsContent value="efectos" className="space-y-4 mt-4">
@@ -294,8 +292,8 @@ export default function EditorClient() {
             </Tabs>
           </div>
 
-          <div style={{border: '1px solid orange', padding: '10px', background: '#fff5e6'}}> {/* Cambiado el color para indicar Paso A */}
-            <h3 className="text-lg font-semibold mb-2">Vista Previa (Paso A: Rot. Slider Activo)</h3>
+          <div style={{border: '1px solid mediumseagreen', padding: '10px', background: '#f0fff0'}}> {/* Cambiado el color para indicar Paso B */}
+            <h3 className="text-lg font-semibold mb-2">Vista Previa (Paso B: TODO Rot. Activo)</h3>
             <div style={textStyle}>
               {text || "Escribe algo..."}
             </div>
@@ -332,7 +330,7 @@ export default function EditorClient() {
         </div>
 
         {isMobile && <div className="h-16"></div>}
-        {/* <p style={{color: 'darkorange', marginTop: '20px', textAlign: 'center', fontWeight: 'bold'}}>TEST STEP A: Rotation Slider UNCOMMENTED. Reset Button REMAINS COMMENTED.</p> */}
+        {/* <p style={{color: 'green', marginTop: '20px', textAlign: 'center', fontWeight: 'bold'}}>TEST STEP B: Both Rotation Slider and Reset Button UNCOMMENTED.</p> */}
       </main>
       <SiteFooter />
     </div>
