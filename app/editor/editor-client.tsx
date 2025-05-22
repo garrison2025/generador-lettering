@@ -21,62 +21,39 @@ import { TouchSlider } from "@/components/ui/touch-slider";
 import { TouchColorPicker } from "@/components/ui/touch-color-picker";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
-// CONSTANTES COMPLETAS (tomadas de tu "versión inicial")
+// CONSTANTES MINIMIZADAS PARA PRUEBA
 const FONTS = [
   { id: "dancing-script", name: "Caligrafía Elegante", family: "'Dancing Script', cursive" },
-  { id: "pacifico", name: "Script Moderno", family: "'Pacifico', cursive" },
-  { id: "satisfy", name: "Caligrafía Fluida", family: "'Satisfy', cursive" },
-  { id: "sacramento", name: "Lettering Fino", family: "'Sacramento', cursive" },
-  { id: "great-vibes", name: "Caligrafía Clásica", family: "'Great Vibes', cursive" },
-  { id: "amatic-sc", name: "Letras Manuales", family: "'Amatic SC', cursive" },
-  { id: "lobster", name: "Lettering Bold", family: "'Lobster', cursive" },
-  { id: "caveat", name: "Escritura Natural", family: "'Caveat', cursive" },
-  { id: "kaushan-script", name: "Script Dinámico", family: "'Kaushan Script', cursive" },
-  { id: "permanent-marker", name: "Marcador", family: "'Permanent Marker', cursive" },
+  // Solo una fuente para la prueba
 ];
 
 const COLORS = [
   { name: "Negro", value: "#000000" },
   { name: "Blanco", value: "#FFFFFF" },
-  { name: "Primario", value: "#5B4FBE" },
-  { name: "Secundario", value: "#FF6B6B" },
-  { name: "Acento", value: "#FFD93D" },
-  { name: "Gris Oscuro", value: "#4A4A4A" },
-  { name: "Rojo", value: "#E53935" },
-  { name: "Verde", value: "#43A047" },
-  { name: "Azul", value: "#1E88E5" },
-  { name: "Morado", value: "#8E24AA" },
+  { name: "Primario Test", value: "#5B4FBE" }, // Un color primario para asegurar que exista
+  // Solo tres colores para la prueba
 ];
 
-const PLANTILLAS = [
-  { id: "boda", categoria: "ocasiones", nombre: "Invitación de Boda", texto: "Juan & María\n12 de Junio 2023", estilo: "dancing-script", color: "#5B4FBE", fontSize: 70, letterSpacing: 1, lineHeight: 1.8, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.3)", shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "cumpleanos", categoria: "ocasiones", nombre: "Feliz Cumpleaños", texto: "¡Feliz Cumpleaños!", estilo: "pacifico", color: "#FF6B6B", fontSize: 80, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.2)", shadowBlur: 5, shadowOffsetX: 1, shadowOffsetY: 1, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "graduacion", categoria: "ocasiones", nombre: "Graduación", texto: "¡Felicidades\nGraduado 2023!", estilo: "great-vibes", color: "#4A4A4A", fontSize: 65, letterSpacing: 1, lineHeight: 1.6, alignment: "center", rotation: 0, shadow: false, outline: true, outlineColor: "#FFD93D", outlineWidth: 1 },
-  { id: "motivacion1", categoria: "frases", nombre: "Motivación Diaria", texto: "Nunca te rindas", estilo: "permanent-marker", color: "#E53935", fontSize: 75, letterSpacing: 1, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.4)", shadowBlur: 3, shadowOffsetX: 3, shadowOffsetY: 3, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "motivacion2", categoria: "frases", nombre: "Éxito", texto: "El éxito es la suma de pequeños esfuerzos", estilo: "satisfy", color: "#1E88E5", fontSize: 60, letterSpacing: 0, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: false, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "amor", categoria: "frases", nombre: "Amor", texto: "Ama y sé feliz", estilo: "sacramento", color: "#FF6B6B", fontSize: 85, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "rgba(0,0,0,0.2)", shadowBlur: 4, shadowOffsetX: 1, shadowOffsetY: 1, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "navidad", categoria: "festividades", nombre: "Navidad", texto: "¡Feliz Navidad\ny Próspero Año Nuevo!", estilo: "lobster", color: "#43A047", fontSize: 65, letterSpacing: 1, lineHeight: 1.6, alignment: "center", rotation: 0, shadow: true, shadowColor: "#FF6B6B", shadowBlur: 4, shadowOffsetX: 2, shadowOffsetY: 2, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "annonuevo", categoria: "festividades", nombre: "Año Nuevo", texto: "¡Feliz 2023!", estilo: "kaushan-script", color: "#FFD93D", fontSize: 90, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "#4A4A4A", shadowBlur: 6, shadowOffsetX: 2, shadowOffsetY: 2, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "halloween", categoria: "festividades", nombre: "Halloween", texto: "Noche de Terror", estilo: "amatic-sc", color: "#8E24AA", fontSize: 85, letterSpacing: 3, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: true, shadowColor: "#000000", shadowBlur: 8, shadowOffsetX: 4, shadowOffsetY: 4, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-  { id: "logo", categoria: "negocios", nombre: "Logo Empresa", texto: "Mi Empresa", estilo: "caveat", color: "#5B4FBE", fontSize: 75, letterSpacing: 2, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: false, outline: true, outlineColor: "#FFFFFF", outlineWidth: 2 },
-  { id: "promocion", categoria: "negocios", nombre: "Promoción", texto: "¡OFERTA\nESPECIAL!", estilo: "permanent-marker", color: "#E53935", fontSize: 80, letterSpacing: 1, lineHeight: 1.4, alignment: "center", rotation: -5, shadow: true, shadowColor: "#000000", shadowBlur: 2, shadowOffsetX: 2, shadowOffsetY: 2, outline: true, outlineColor: "#FFD93D", outlineWidth: 3 },
-  { id: "menu", categoria: "negocios", nombre: "Menú Restaurante", texto: "Nuestro Menú", estilo: "great-vibes", color: "#4A4A4A", fontSize: 70, letterSpacing: 1, lineHeight: 1.5, alignment: "center", rotation: 0, shadow: false, outline: false, outlineColor: "#FFFFFF", outlineWidth: 1 },
-];
+const PLANTILLAS: any[] = []; // PLANTILLAS VACÍO PARA LA PRUEBA
 
 export default function EditorClient() {
   const searchParams = useSearchParams();
-  const plantillaId = searchParams.get("plantilla");
+  const plantillaId = searchParams.get("plantilla"); 
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
+  const defaultFontId = FONTS[0]?.id || "dancing-script"; 
+  const defaultFontObject = FONTS.find(f => f.id === defaultFontId) || { id: "default", name: "Default", family: "sans-serif" };
+  const defaultColorValue = COLORS[0]?.value || "#000000";
+
   const [text, setText] = useState("Tu texto aquí");
   const [fontSize, setFontSize] = useState(60);
-  const [color, setColor] = useState(COLORS.find(c => c.name === "Primario")?.value || COLORS[0]?.value || "#5B4FBE"); // Usar valor por defecto si no se encuentra
+  const [color, setColor] = useState(defaultColorValue);
   const [alignment, setAlignment] = useState<"left" | "center" | "right">("center");
   const [letterSpacing, setLetterSpacing] = useState(0);
   const [lineHeight, setLineHeight] = useState(1.5);
   const [rotation, setRotation] = useState(0);
-  const [font, setFont] = useState(FONTS[0]?.id || "dancing-script"); // Usar valor por defecto si FONTS está vacío
+  const [font, setFont] = useState(defaultFontId);
 
   const [shadow, setShadow] = useState(false);
   const [shadowColor, setShadowColor] = useState("#000000");
@@ -103,33 +80,17 @@ export default function EditorClient() {
 
   useEffect(() => {
     if (plantillaId) {
-      const plantilla = PLANTILLAS.find((p) => p.id === plantillaId);
+      const plantilla = PLANTILLAS.find((p) => p.id === plantillaId); // PLANTILLAS está vacío, así que plantilla será undefined
       if (plantilla) {
+        // Este bloque no se ejecutará
         setText(plantilla.texto); 
-        setFont(plantilla.estilo || (FONTS[0]?.id || "dancing-script")); // Fallback si la plantilla no tiene estilo
-        setFontSize(plantilla.fontSize);
-        setColor(plantilla.color); 
-        setAlignment(plantilla.alignment as "left" | "center" | "right");
-        setLetterSpacing(plantilla.letterSpacing); 
-        setLineHeight(plantilla.lineHeight);
-        setRotation(plantilla.rotation); 
-        setShadow(plantilla.shadow);
-        if (plantilla.shadow) {
-          setShadowColor(plantilla.shadowColor || "#000000"); 
-          setShadowBlur(plantilla.shadowBlur || 0); 
-          setShadowOffsetX(plantilla.shadowOffsetX || 0); 
-          setShadowOffsetY(plantilla.shadowOffsetY || 0);
-        }
-        setOutline(plantilla.outline);
-        if (plantilla.outline) {
-          setOutlineColor(plantilla.outlineColor || "#FFFFFF"); 
-          setOutlineWidth(plantilla.outlineWidth || 0); 
-        }
+        setFont(plantilla.estilo || defaultFontId); 
+        // ... etc ...
       }
     }
-  }, [plantillaId]);
+  }, [plantillaId, defaultFontId]); 
 
-  const currentFont = FONTS.find((f) => f.id === font) || FONTS[0] || { id: "default", name: "Default", family: "sans-serif" }; // Fallback más robusto
+  const currentFont = FONTS.find((f) => f.id === font) || defaultFontObject;
 
   const textStyle: React.CSSProperties = {
     fontFamily: currentFont.family, fontSize: `${fontSize}px`, color: color,
@@ -156,7 +117,7 @@ export default function EditorClient() {
     } finally { setIsExporting(false); }
   };
 
-  // console.log("Stable version with FULL FONTS and COLORS, no Reset/Random buttons."); // Log de depuración
+  // console.log("Testing with MINIMIZED FONTS, COLORS and EMPTY PLANTILLAS.");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -184,21 +145,45 @@ export default function EditorClient() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Vista Previa (Datos Completos)</h3> {/* Título actualizado */}
+                  <h3 className="text-lg font-semibold">Vista Previa (Datos Mínimos)</h3> {/* Título actualizado */}
                   <Popover>
                     <PopoverTrigger asChild> <Button variant="outline" size="sm" disabled={isExporting}> {isExporting ? ( <Loader2 className="h-4 w-4 animate-spin mr-2" /> ) : ( <Download className="h-4 w-4 mr-2" /> )} Exportar </Button> </PopoverTrigger>
                     <PopoverContent className="w-56" align="end"> <div className="grid gap-2"> <Button variant="ghost" size="sm" onClick={() => exportAsImage("png")} className="justify-start" disabled={isExporting}>PNG (Transparente)</Button> <Button variant="ghost" size="sm" onClick={() => exportAsImage("jpg")} className="justify-start" disabled={isExporting}>JPG (Fondo Blanco)</Button> </div> </PopoverContent>
                   </Popover>
                 </div>
                 
-                <div ref={previewRef} style={{ border: '1px solid #16a34a', padding: '10px', background: '#ecfdf5' }} className="lettering-preview-capture-area bg-white rounded-md overflow-hidden"> {/* Borde verde oscuro para indicar estabilidad */}
+                <div ref={previewRef} style={{ border: '1px solid #facc15', padding: '10px', background: '#fefce8' }} className="lettering-preview-capture-area bg-white rounded-md overflow-hidden"> {/* Borde amarillo para indicar prueba de datos mínimos */}
                   <div style={textStyle}> {text || "Escribe algo..."} </div>
                 </div>
+                 {/* Plantillas Populares y Consejos no se muestran si isMobile es true, o si decides quitarlos permanentemente */}
               </CardContent>
             </Card>
-
             {!isMobile && (
-              <div className="mt-6 space-y-6"> <Card> <CardContent className="pt-6"> <h3 className="text-xl font-semibold mb-3">Plantillas Populares</h3> <ul className="space-y-2"> {PLANTILLAS.slice(0, 3).map(p => (<li key={p.id}><Link href={`/editor?plantilla=${p.id}`} className="text-blue-600 hover:underline">{p.nombre}</Link></li>))} </ul> </CardContent> </Card> <Card> <CardContent className="pt-6"> <h3 className="text-xl font-semibold mb-3">Consejos Rápidos</h3> <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground"> <li>Usa fuentes legibles para mensajes importantes.</li> <li>Contrasta bien el color del texto con el fondo.</li> </ul> </CardContent> </Card> </div>
+              <div className="mt-6 space-y-6"> 
+                <Card> 
+                  <CardContent className="pt-6"> 
+                    <h3 className="text-xl font-semibold mb-3">Plantillas Populares (Simulado)</h3> 
+                    {PLANTILLAS.length > 0 ? (
+                        <ul className="space-y-2"> 
+                            {PLANTILLAS.slice(0, 3).map(p => (
+                                <li key={p.id}><Link href={`/editor?plantilla=${p.id}`} className="text-blue-600 hover:underline">{p.nombre}</Link></li>
+                            ))} 
+                        </ul>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">No hay plantillas disponibles en esta prueba.</p>
+                    )}
+                  </CardContent> 
+                </Card> 
+                <Card> 
+                  <CardContent className="pt-6"> 
+                    <h3 className="text-xl font-semibold mb-3">Consejos Rápidos</h3> 
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground"> 
+                      <li>Usa fuentes legibles para mensajes importantes.</li> 
+                      <li>Contrasta bien el color del texto con el fondo.</li> 
+                    </ul> 
+                  </CardContent> 
+                </Card> 
+              </div>
             )}
           </div>
         </div>
