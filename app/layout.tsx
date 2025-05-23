@@ -1,129 +1,69 @@
-// app/layout.tsx
 import type React from "react";
+import dynamic from 'next/dynamic';
+import Script from 'next/script'; // 导入 Script 组件
+import type { Metadata } from "next";
+
 import "@/app/globals.css"; // 确保你的全局 CSS 路径正确
 import { ThemeProvider } from "@/components/theme-provider"; // 确保路径正确
+import { SchemaMarkup } from "@/components/seo/schema-markup"; // 确保路径正确
+
 import {
   Inter,
   Roboto,
-  Dancing_Script,
-  Pacifico,
-  Satisfy,
-  Sacramento,
-  Great_Vibes,
-  Amatic_SC,
-  Lobster,
-  Caveat,
-  Kaushan_Script,
-  Permanent_Marker,
+  // 注意：以下艺术字体已从此全局布局中移除
+  // Dancing_Script, Pacifico, Satisfy, Sacramento, Great_Vibes,
+  // Amatic_SC, Lobster, Caveat, Kaushan_Script, Permanent_Marker,
 } from "next/font/google";
-import type { Metadata } from "next";
-import { Toaster } from "@/components/ui/toaster"; // 确保路径正确
-import { SchemaMarkup } from "@/components/seo/schema-markup"; // 确保路径正确
-import Script from 'next/script'; // 导入 Script 组件
 
-// 基础字体 Inter (通常用于网站主体文本)
+// 动态导入 Toaster 组件
+const Toaster = dynamic(() => import('@/components/ui/toaster').then(mod => mod.Toaster), {
+  ssr: false, // Toaster 通常是客户端组件，如果不需要SSR可以设置为false
+});
+
+// --- 关键字体定义 ---
+
+// 基础字体 Inter (预加载以优化 LCP/FCP)
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
   fallback: ["system-ui", "arial", "sans-serif"],
   adjustFontFallback: true,
-  preload: false,
+  preload: true, // 优化：设置为 true
 });
 
-// Roboto 字体 (你的 H1 和 LCP <p> 元素使用的字体)
+// Roboto 字体 (H1 和 LCP <p> 元素使用的字体，预加载)
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
   variable: "--font-roboto",
   fallback: ["helvetica", "arial", "sans-serif"],
-  preload: true,
+  preload: true, // 保持 true
 });
 
-// Lettering 艺术字体 (保持 preload: false)
-const dancingScript = Dancing_Script({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-  variable: "--font-dancing-script",
-  preload: false,
-});
-
-const pacifico = Pacifico({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-pacifico",
-  preload: false,
-});
-
-const satisfy = Satisfy({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-satisfy",
-  preload: false,
-});
-
-const sacramento = Sacramento({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-sacramento",
-  preload: false,
-});
-
-const greatVibes = Great_Vibes({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-great-vibes",
-  preload: false,
-});
-
-const amaticSC = Amatic_SC({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-  variable: "--font-amatic-sc",
-  preload: false,
-});
-
-const lobster = Lobster({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-lobster",
-  preload: false,
-});
-
-const caveat = Caveat({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-  variable: "--font-caveat",
-  preload: false,
-});
-
-const kaushanScript = Kaushan_Script({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-kaushan-script",
-  preload: false,
-});
-
-const permanentMarker = Permanent_Marker({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-permanent-marker",
-  preload: false,
-});
+// --- 艺术字体说明 ---
+// 重要的性能优化：
+// 以下艺术字体已从全局 RootLayout 中移除。
+// 请在你实际需要使用这些字体的特定组件或页面中单独导入和定义它们。
+// 例如，在一个使用 Dancing_Script 的组件中：
+// import { Dancing_Script } from "next/font/google";
+// const dancingScript = Dancing_Script({ subsets: ['latin'], weight: ['400'], display: 'swap', variable: '--font-dancing-script', preload: false });
+// 然后在该组件的 JSX 中使用 dancingScript.variable 或 dancingScript.className。
+//
+// const dancingScript = Dancing_Script({ preload: false, ... });
+// const pacifico = Pacifico({ preload: false, ... });
+// const satisfy = Satisfy({ preload: false, ... });
+// const sacramento = Sacramento({ preload: false, ... });
+// const greatVibes = Great_Vibes({ preload: false, ... });
+// const amaticSC = Amatic_SC({ preload: false, ... });
+// const lobster = Lobster({ preload: false, ... });
+// const caveat = Caveat({ preload: false, ... });
+// const kaushanScript = Kaushan_Script({ preload: false, ... });
+// const permanentMarker = Permanent_Marker({ preload: false, ... });
 
 
-// --- Metadata (保持你原有的配置) ---
+// --- Metadata (保持你原有的配置, 移除了重复的 google-site-verification) ---
 export const metadata: Metadata = {
   metadataBase: new URL("https://generadordelettering.org"),
   title: "Generador de Lettering - Crea diseños tipográficos únicos y letras personalizadas",
@@ -180,7 +120,7 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
-  verification: {
+  verification: { // 优化：仅保留此处的 Google 验证
     google: "5Fg8Nv7tz4ioNMiGxduGbA7Fby2Y5KHTirnZOfIPExM",
   },
   robots: {
@@ -193,9 +133,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  other: {
-    "google-site-verification": "5Fg8Nv7tz4ioNMiGxduGbA7Fby2Y5KHTirnZOfIPExM",
-  },
+  // 优化：移除了 other: { "google-site-verification": ... } 因为已在 verification 中
   generator: 'v0.dev'
 };
 
@@ -217,7 +155,8 @@ export default function RootLayout({
     <html
       lang="es"
       suppressHydrationWarning
-      className={`scroll-smooth ${inter.variable} ${roboto.variable} ${dancingScript.variable} ${pacifico.variable} ${satisfy.variable} ${sacramento.variable} ${greatVibes.variable} ${amaticSC.variable} ${lobster.variable} ${caveat.variable} ${kaushanScript.variable} ${permanentMarker.variable}`}
+      // 优化：className 中只包含全局需要的字体变量
+      className={`scroll-smooth ${inter.variable} ${roboto.variable}`}
     >
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -232,7 +171,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <Toaster />
+          <Toaster /> {/* Toaster 现在是动态导入的 */}
         </ThemeProvider>
 
         {/* Adsterra Social Bar Script */}
@@ -241,8 +180,7 @@ export default function RootLayout({
           src="//pl26707745.profitableratecpm.com/aa/3e/7c/aa3e7c6a9214fa224ddd32eef045cb13.js"
           strategy="afterInteractive"
           type="text/javascript"
-          // async // 可选：如果 Adsterra 脚本支持异步加载，可以取消注释此行以提高性能。
-                  // 如果不确定，可以先不加，或者查阅 Adsterra 文档。
+          async // 优化：添加 async 属性，如果脚本支持且不影响功能
         />
       </body>
     </html>
