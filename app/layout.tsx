@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type React from "react";
 import "@/app/globals.css"; // 确保你的全局 CSS 路径正确
 import { ThemeProvider } from "@/components/theme-provider"; // 确保路径正确
@@ -18,7 +19,7 @@ import {
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster"; // 确保路径正确
 import { SchemaMarkup } from "@/components/seo/schema-markup"; // 确保路径正确
-// import { FontLoader } from "@/components/font-loader"; // 保持注释掉或移除
+import Script from 'next/script'; // 导入 Script 组件
 
 // 基础字体 Inter (通常用于网站主体文本)
 const inter = Inter({
@@ -27,17 +28,17 @@ const inter = Inter({
   variable: "--font-inter",
   fallback: ["system-ui", "arial", "sans-serif"],
   adjustFontFallback: true,
-  preload: false, // 调整：如果 Roboto 是更关键的 LCP/首屏字体，Inter 可以不预加载
+  preload: false,
 });
 
 // Roboto 字体 (你的 H1 和 LCP <p> 元素使用的字体)
 const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["400", "700"], // 调整：只加载实际用到的字重 (例如常规和粗体)
+  weight: ["400", "700"],
   display: "swap",
   variable: "--font-roboto",
   fallback: ["helvetica", "arial", "sans-serif"],
-  preload: true, // 保持预加载，因为它是 LCP 和主要标题的字体
+  preload: true,
 });
 
 // Lettering 艺术字体 (保持 preload: false)
@@ -216,23 +217,12 @@ export default function RootLayout({
     <html
       lang="es"
       suppressHydrationWarning
-      // 将所有字体变量添加到html标签，以便全局可用
       className={`scroll-smooth ${inter.variable} ${roboto.variable} ${dancingScript.variable} ${pacifico.variable} ${satisfy.variable} ${sacramento.variable} ${greatVibes.variable} ${amaticSC.variable} ${lobster.variable} ${caveat.variable} ${kaushanScript.variable} ${permanentMarker.variable}`}
     >
       <head>
-        {/*
-          移除了原有的 Google Fonts <link> 标签。
-          移除了原有的 FontLoader 组件。
-        */}
-
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
         <SchemaMarkup />
-
-        {/* 移除了 Logo 图片的预加载链接 */}
-        {/* <link rel="preload" href="/logo-light.png" as="image" /> */}
-        {/* <link rel="preload" href="/logo-dark.png" as="image" /> */}
       </head>
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
@@ -244,6 +234,16 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ThemeProvider>
+
+        {/* Adsterra Social Bar Script */}
+        <Script
+          id="adsterra-socialbar"
+          src="//pl26707745.profitableratecpm.com/aa/3e/7c/aa3e7c6a9214fa224ddd32eef045cb13.js"
+          strategy="afterInteractive"
+          type="text/javascript"
+          // async // 可选：如果 Adsterra 脚本支持异步加载，可以取消注释此行以提高性能。
+                  // 如果不确定，可以先不加，或者查阅 Adsterra 文档。
+        />
       </body>
     </html>
   );
