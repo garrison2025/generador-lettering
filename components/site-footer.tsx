@@ -53,6 +53,17 @@ export function SiteFooter() {
                   Política de Privacidad
                 </Link>
               </li>
+              {/* 新增的高权重 Dofollow 外链 */}
+              <li>
+                <a 
+                  href="https://conversordeletrasbonitas.org/" 
+                  target="_blank" 
+                  rel="noopener" 
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  Conversor de Letras Bonitas
+                </a>
+              </li>
             </ul>
           </div>
           <div>
